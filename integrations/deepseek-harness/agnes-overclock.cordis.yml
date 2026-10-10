@@ -1,0 +1,14 @@
+# Opt-in overlay for DeepSeek Harness (dsh). Replace the path with your clone.
+# Use it the way DSH's own mcp-memory examples are used:
+#   dsh web --patch "$PWD/agnes-overclock.cordis.yml"
+# Shape copied from apps/cli/config/examples/mcp-memory/*.cordis.yml in
+# https://github.com/deepseek-ai/deepseek-harness (MIT). UNTESTED here: dsh is
+# in developer preview and this server has not been run inside it.
+- insert:
+    - id: agnes-overclock-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: agnes_overclock
+        transport: stdio
+        command: python3
+        args: ['/ABSOLUTE/PATH/TO/agnes-3-flash-overclock/agnes_mcp.py']
