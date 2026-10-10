@@ -73,7 +73,7 @@ The core above is unchanged: `check.py` stays offline and stdlib-only. Optional 
 
 - `agnes_kit/`: message builders, optional adapters (mem0, Headroom, Self-Learning-Agents), and a stdlib MCP server (`python3 agnes_mcp.py`).
 - `agnes.config.json`: Agnes parameters (512K context, OpenAI-compatible API, env-var names only, no keys).
-- `integrations/`, `docs/hosts.md`, `docs/integrations.md`: per-host MCP configs (Claude Code plugin, Cursor, Codex, Antigravity/agy, ZCode, Trae, DeepSeek TUI, Windsurf) checked against vendor docs, generic API script. ACP: notes only. No host was run end to end.
+- `integrations/`, `docs/hosts.md`, `docs/integrations.md`: per-host MCP configs (Claude Code plugin, Cursor, Codex, Antigravity/agy, ZCode, Trae, DeepSeek Harness, DeepSeek TUI, Windsurf) checked against vendor docs, generic API script. ACP: notes only. No host was run end to end.
 - `third_party/`: vendored MIT skills (code review checklist from awesome-skills/code-review-skill, brainstorming from obra/superpowers) with license files.
 - `THIRD_PARTY.md`: every external component, source and license. `docs/fable-review.md`: what was considered from fable and why nothing was copied.
 
