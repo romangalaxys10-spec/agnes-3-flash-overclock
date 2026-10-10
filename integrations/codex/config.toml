@@ -1,0 +1,4 @@
+# Merge into ~/.codex/config.toml (or a trusted project's .codex/config.toml)
+[mcp_servers.agnes-overclock]
+command = "python3"
+args = ["/ABSOLUTE/PATH/TO/agnes-3-flash-overclock/agnes_mcp.py"]
