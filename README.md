@@ -67,6 +67,18 @@ The prompts correspond to the measured two-pass condition. The stricter local ch
 
 This repository supplies prompts and an offline checker, **not an API client or automated orchestration service**. Choose your own model access and verify its current billing and limits before running it.
 
+## Extensions (all UNTESTED with Agnes)
+
+The core above is unchanged: `check.py` stays offline and stdlib-only. Optional extras:
+
+- `agnes_kit/`: message builders, optional adapters (mem0, Headroom, Self-Learning-Agents), and a stdlib MCP server (`python3 agnes_mcp.py`).
+- `agnes.config.json`: Agnes parameters (512K context, OpenAI-compatible API, env-var names only, no keys).
+- `integrations/`, `docs/hosts.md`, `docs/integrations.md`: per-host MCP configs (Claude Code plugin, Cursor, Codex, Antigravity/agy, ZCode, Trae, DeepSeek TUI, Windsurf) checked against vendor docs, generic API script. ACP: notes only. No host was run end to end.
+- `third_party/`: vendored MIT skills (code review checklist from awesome-skills/code-review-skill, brainstorming from obra/superpowers) with license files.
+- `THIRD_PARTY.md`: every external component, source and license. `docs/fable-review.md`: what was considered from fable and why nothing was copied.
+
+None of these extensions were benchmarked. The 84% / 71% / 88% results cover only the v1 prompts and editor pass.
+
 ## Included
 
 - `SKILL.md`: workflow, failure modes, and promotion criteria.
@@ -74,7 +86,7 @@ This repository supplies prompts and an offline checker, **not an API client or 
 - `check.py`: word bands, strict JSON, scene durations, paragraph constraints, numeric literals, and wrapper/preamble checks.
 - `tasks.json`: six original Russian evaluation tasks.
 - `constraints.example.json`: custom-constraint example.
-- `tests/`: 14 offline regression tests for the checker.
+- `tests/`: 14 offline regression tests for the checker (`test_check.py`), plus 7 for the optional extras (`test_agnes_kit.py`, `test_mcp.py`).
 - `docs/benchmark-report.md`: public-safe benchmark pack, original scorer excerpt, and caveats.
 - `evidence.md` and `verification.md`: evidence boundary and local verification.
 
