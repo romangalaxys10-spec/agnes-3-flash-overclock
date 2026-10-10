@@ -1,0 +1,6 @@
+{
+  "word_range": [80, 100],
+  "no_markdown": true,
+  "preserve_source_numbers": true,
+  "required_numbers": ["10", "2.5"]
+}
