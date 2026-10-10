@@ -1,0 +1,13 @@
+{
+  "name": "agnes-overclock",
+  "description": "Agnes 3.0 Flash workflow: tested v1 prompts, editor pass, offline checker (experimental, untested with Agnes in this host)",
+  "version": "0.1.0",
+  "license": "MIT",
+  "skills": ["./"],
+  "mcpServers": {
+    "agnes-overclock": {
+      "command": "python3",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/agnes_mcp.py"]
+    }
+  }
+}
