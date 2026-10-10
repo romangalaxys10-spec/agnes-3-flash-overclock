@@ -1,0 +1,7 @@
+{
+  "mcp": {
+    "servers": {
+      "agnes-overclock": {"command": "python3", "args": ["/ABSOLUTE/PATH/TO/agnes-3-flash-overclock/agnes_mcp.py"]}
+    }
+  }
+}
