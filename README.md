@@ -1,0 +1,91 @@
+# Agnes 3.0 Flash Overclock
+
+**Better outputs through measured prompts, an editor pass, and code that checks what the model gets wrong.**
+
+An experimental prompt-engineering and validation kit for Agnes 3.0 Flash. Built around Russian short-video scripts, source-preserving rewrites, and constrained JSON. "Overclock" means tuning the workflow, not modifying model weights, unlocking compute, or proving maximum quality.
+
+**Experimental. Not installed in a production pipeline.** v1 has a small benchmark behind it. v2 is a proposed code-validated repair loop and has not been tested against Agnes.
+
+## What the benchmark actually showed
+
+Six tasks, two samples per condition per task, 35 of 36 planned calls completed on October 10, 2026.
+
+| Workflow | Automatic checks passed | Fully passing samples |
+| --- | --- | --- |
+| Plain task | 47/56 (84%) | 5/11 |
+| Adapted prompt alone | 36/51 (71%) | 3/11 |
+| Adapted prompt + editor pass | 43/49 (88%) | 6/10 |
+
+The editor pass helped. A heavier prompt alone hurt. These are **directional constraint-check scores**, not general intelligence or writing-quality scores. Empty/incomplete outputs were excluded, denominators differ, and there was no blind quality judge. The reference was a self-written answer set, not a verified Opus 5 run. No Opus parity claim is supported.
+
+The tested adapted prompt includes `<check>` and `<final>` blocks. A simple style prompt plus editor was not separately measured. Dropping planning and adding deterministic repair is **v2-untested**, not a demonstrated improvement.
+
+## Quickstart
+
+Python 3.10+; standard library only. No API key, dependencies, or network access required by the checker.
+
+```bash
+git clone https://github.com/romangalaxys10-spec/agnes-3-flash-overclock.git
+cd agnes-3-flash-overclock
+python3 -m unittest discover -s tests -v
+python3 check.py --task T1_script60 --input draft.txt
+```
+
+Save the exact model payload as UTF-8 `draft.txt` first. The checker does not call Agnes or generate text.
+
+```bash
+# Source-preserving rewrite
+python3 check.py --task T5_rewrite --input draft.txt --source source.txt
+
+# Explicitly extract a tested v1 final block before checking
+python3 check.py --task T2_scenejson --input editor.txt --extract-final
+
+# Your own constraints
+python3 check.py --config constraints.example.json --input draft.txt --source source.txt
+```
+
+Exit codes: `0` passes structural checks; `1` reports violations; `2` reports a configuration or I/O error. The JSON report contains counts, exact violations, manual-review warnings, and the checked payload.
+
+## Two workflows, clearly separated
+
+### v1: tested prompts
+
+1. Append the task to `prompts/v1-generation-tested.txt`.
+2. Generate a draft and extract its single `<final>` block.
+3. Send the original task and draft through `prompts/v1-editor-tested.txt`.
+4. Extract the editor's final block, check it, and review facts and voice.
+
+The prompts correspond to the measured two-pass condition. The stricter local checker is a later implementation improvement, not the original benchmark scorer.
+
+### v2: untested repair loop
+
+1. Fill `{{SOURCE}}` and `{{TASK}}` in `prompts/v2-generation-untested.txt`.
+2. Generate once, then run `check.py` on the payload.
+3. If it fails, fill `prompts/v2-repair-untested.txt` with the source, task, draft, and exact `violations` array.
+4. Recheck every replacement. Stop after at most two repair calls.
+5. Review facts and voice even when the code passes.
+
+This repository supplies prompts and an offline checker, **not an API client or automated orchestration service**. Choose your own model access and verify its current billing and limits before running it.
+
+## Included
+
+- `SKILL.md`: workflow, failure modes, and promotion criteria.
+- `prompts/`: tested v1 and explicitly untested v2 templates.
+- `check.py`: word bands, strict JSON, scene durations, paragraph constraints, numeric literals, and wrapper/preamble checks.
+- `tasks.json`: six original Russian evaluation tasks.
+- `constraints.example.json`: custom-constraint example.
+- `tests/`: 14 offline regression tests for the checker.
+- `docs/benchmark-report.md`: public-safe benchmark pack, original scorer excerpt, and caveats.
+- `evidence.md` and `verification.md`: evidence boundary and local verification.
+
+## Limits worth keeping
+
+A code pass does not prove truth. Numeric checks compare literal sets, not associations or occurrence counts. They cannot catch every spelled-out invented number, name, fabricated study, or altered fact. Sentence and preamble checks are heuristics. Human factual and voice review remains required.
+
+The new checker is stricter than the old scorer, so its results must not replace the published aggregate scores. Raw run outputs and full reference answers are not included; the historical scores cannot be fully reproduced from this release alone.
+
+Before promoting v2, run matched trials with failed, empty, and timed-out attempts retained in the denominator, record latency, and use a blind review of factual fidelity and voice. Do not use this kit for high-stakes unsupervised decisions.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
