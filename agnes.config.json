@@ -1,0 +1,12 @@
+{
+  "_comment": "Agnes parameters. No keys here: set the key in the environment variable named by api_key_env. UNTESTED against a live Agnes endpoint.",
+  "model": "agnes-3.0-flash",
+  "context_window_tokens": 524288,
+  "api_style": "openai-compatible",
+  "base_url_env": "AGNES_BASE_URL",
+  "api_key_env": "AGNES_API_KEY",
+  "workflow": "v1-generate-then-edit",
+  "token_saver": {"enabled": false, "backend": "headroom", "reserve_output_tokens": 8192},
+  "memory": {"enabled": false, "backend": "file", "path": "memory_store.json", "top_k": 3},
+  "lessons": {"enabled": false, "backend": "file", "path": "lessons.json", "max_items": 2}
+}
