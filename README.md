@@ -6,6 +6,37 @@ An experimental prompt-engineering and validation kit for Agnes 3.0 Flash. Built
 
 **Experimental. Not installed in a production pipeline.** v1 has a small benchmark behind it. v2 is a proposed code-validated repair loop and has not been tested against Agnes.
 
+## October 11 QA and proof-protocol updates
+
+The 25-reviewer QA fixes and Anti Helizzinator feature are included together.
+This remains experimental; plugin and MCP runtime identifiers stay at 0.1.0.
+[CHANGELOG.md](CHANGELOG.md) tracks these changes under the existing 0.1.1
+maintenance heading. No v1.0 release or new model-quality result is claimed.
+
+- **Tested workflow fidelity:** restored the full 1542-byte generation prompt
+  from the report; labelled editor task/draft inputs; corrected the old
+  byte-equivalence claim. Tested prompt edits are restoration only.
+- **Checker safety:** all-Unicode letter denominator, stronger scene-language
+  heuristics, UTF-8 console reports, deep-JSON error handling, plus-bullet and
+  blockquote detection. Structural checks remain separate from factual review.
+- **API and storage:** remote HTTPS and safe redirects; atomic memory replacement,
+  schema-drift rejection; owner-scoped lessons with a minimum relevance threshold.
+- **MCP and host setup:** exactly one preset/config selector, JSON-RPC 2.0 validation,
+  a separate ZCode project config, repo-root DeepSeek Harness command and
+  per-host installation/verification steps. agy has no dedicated config yet.
+- **Evidence and onboarding:** honest 36-planned/32-included benchmark accounting,
+  explicit unrecoverable missing evidence, readable prompt fences and English
+  glosses, runnable synthetic examples, scoped host claims, optional dependency
+  pin guidance and external lessons' network/cost caveats.
+- **Proof-of-delivery:** optional work/code/visual evidence gates, schema-v1
+  envelope, prompt, example and CLI/MCP integration. Presence and shape are checked,
+  not truth. See the protocol section below before using it as a completion gate.
+
+71 offline tests pass (22 original, 22 QA regressions, 27 proof-protocol tests).
+Cold-clone quickstart and stdio MCP smoke checks pass; real IDE hosts, optional
+upstream packages and live Agnes generation remain untested. Historical benchmark
+aggregates are unchanged, and repository history has not been rewritten.
+
 ## What the benchmark actually showed
 
 Six tasks, two samples per condition per task, 35 of 36 planned calls completed on October 10, 2026.
