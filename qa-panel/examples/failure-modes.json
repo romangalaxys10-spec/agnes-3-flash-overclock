@@ -1,5 +1,5 @@
 {
-  "agent": "edge-inputs",
+  "agent": "failure-modes",
   "base_sha": "c7d4f39",
   "reviewed_clean_clone": true,
   "findings": [

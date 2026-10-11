@@ -73,7 +73,7 @@ def _item(it, args):
         p = next(x for x in persp if x["id"] == agent)
         txt = (tpl.replace("{{agent_id}}", p["id"]).replace("{{number}}", str(p["number"])).replace("{{wave}}", str(p["wave"]))
                .replace("{{wave_name}}", p["wave_name"]).replace("{{name}}", p["name"]).replace("{{focus}}", p["focus"])
-               .replace("{{base_sha}}", sha).replace("{{repo_url}}", args.get("repo_url") or "<repo-url>"))
+               .replace("{{total}}", str(len(persp))).replace("{{base_sha}}", sha).replace("{{repo_url}}", args.get("repo_url") or "<repo-url>"))
         return f"qa-panel/agent-brief.md rendered for {agent}", txt
     raise ValueError(f"unknown item type {t}")
 

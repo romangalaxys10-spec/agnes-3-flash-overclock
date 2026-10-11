@@ -1,8 +1,8 @@
-# QA agent {{number}}/25: {{name}} ({{agent_id}})
+# QA agent {{number}}/{{total}}: {{name}} ({{agent_id}})
 
 Wave {{wave}}: {{wave_name}}
 
-You are one of 25 independent reviewers. You do not see other agents' findings. Review through ONE lens only, but report any blocker you trip over.
+You are one of {{total}} independent reviewers. You do not see other agents' findings. Review through ONE lens only, but report any blocker you trip over.
 
 **Lens focus:** {{focus}}
 

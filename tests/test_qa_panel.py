@@ -38,21 +38,21 @@ class PanelTests(unittest.TestCase):
             q.render_briefs(P, "main")
 
     def test_validate(self):
-        self.assertEqual(q.validate_report(rep("edge-inputs", []), P, SHA), [])
+        self.assertEqual(q.validate_report(rep("failure-modes", []), P, SHA), [])
         self.assertTrue(q.validate_report(rep("nobody", []), P, SHA))
-        self.assertTrue(q.validate_report(rep("edge-inputs", [], "deadbee"), P, SHA))
-        bad = rep("edge-inputs", [{"title": "t", "severity": "huge", "file": "f", "evidence": ""}])
+        self.assertTrue(q.validate_report(rep("failure-modes", [], "deadbee"), P, SHA))
+        bad = rep("failure-modes", [{"title": "t", "severity": "huge", "file": "f", "evidence": ""}])
         self.assertGreaterEqual(len(q.validate_report(bad, P, SHA)), 2)
-        self.assertTrue(q.validate_report({"agent": "edge-inputs"}, P, SHA))
+        self.assertTrue(q.validate_report({"agent": "failure-modes"}, P, SHA))
 
     def test_consolidate_merges_and_takes_max_severity(self):
-        r = [rep("edge-inputs", [fnd("Crash on empty input", "minor")]),
+        r = [rep("failure-modes", [fnd("Crash on empty input", "minor")]),
              rep("docs-accuracy", [fnd("empty input crash", "blocker")]),
-             rep("onboarding", [fnd("Unrelated thing", "nit", "b.py")])]
+             rep("new-contributor", [fnd("Unrelated thing", "nit", "b.py")])]
         issues = q.consolidate(r)
         self.assertEqual(len(issues), 2)
         self.assertEqual(issues[0]["severity"], "blocker")
-        self.assertEqual(sorted(issues[0]["agents"]), ["docs-accuracy", "edge-inputs"])
+        self.assertEqual(sorted(issues[0]["agents"]), ["docs-accuracy", "failure-modes"])
 
     def test_gate(self):
         r = [rep(p["id"], []) for p in P]

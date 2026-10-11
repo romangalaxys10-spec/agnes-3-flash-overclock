@@ -36,7 +36,7 @@ def render_briefs(perspectives, base_sha, repo_url="<repo-url>", template=None):
         out[p["id"]] = (tpl.replace("{{agent_id}}", p["id"]).replace("{{number}}", str(p["number"]))
                         .replace("{{wave}}", str(p["wave"])).replace("{{wave_name}}", p["wave_name"])
                         .replace("{{name}}", p["name"]).replace("{{focus}}", p["focus"])
-                        .replace("{{base_sha}}", base_sha).replace("{{repo_url}}", repo_url))
+                        .replace("{{total}}", str(len(perspectives))).replace("{{base_sha}}", base_sha).replace("{{repo_url}}", repo_url))
     return out
 
 
