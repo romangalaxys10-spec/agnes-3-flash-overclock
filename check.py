@@ -82,6 +82,21 @@ def validate_config(cfg: Any) -> dict[str, Any]:
     return cfg
 
 
+def letter_share(s: str, pattern: str) -> float:
+    letters = [c for c in s if c.isalpha()]
+    return sum(bool(re.fullmatch(pattern, c)) for c in letters) / len(letters) if letters else 0.0
+
+
+# Heuristic, not language identification. Require an English visual-description
+# anchor as well as ASCII letter dominance; manual language review is still needed.
+ENGLISH_VISUAL_ANCHORS = set("a an the of with in on at and is camera shot cinematic close wide light lighting view frame scene background foreground focus focused slow slowly moving tracking pan zoom lens silhouette sunset sunrise portrait aerial overhead documentary realistic soft dramatic illuminated detailed depth field street room person walking standing glowing natural warm cold shadows".split())
+
+
+def english_visual(s: str) -> bool:
+    tokens = set(re.findall(r"[a-z]+", s.lower()))
+    return letter_share(s, r"[A-Za-z]") >= .9 and not re.search(r"[А-Яа-яЁё]", s) and bool(tokens & ENGLISH_VISUAL_ANCHORS)
+
+
 def strict_json(s: str) -> Any:
     def pairs(items: list[tuple[str,Any]]) -> dict[str,Any]:
         result: dict[str,Any] = {}
@@ -125,12 +140,11 @@ def check(text: str, cfg: dict[str,Any], source: str | None=None) -> dict[str,An
     if 'word_range' in cfg:
         word_band(payload,cfg['word_range'],'output')
     if cfg.get('no_markdown'):
-        require(not re.search(r'[*#`]|^\s*(?:[-•]|\d+[.)])\s',payload,re.M),'Markdown/list marker detected; remove formatting.')
+        require(not re.search(r'[*#`]|^\s*(?:[-+•>]|\d+[.)])\s',payload,re.M),'Markdown/list marker detected; remove formatting.')
     if cfg.get('end_question'):
         require(payload.endswith('?'),'Last phrase must end with a question mark.')
     if 'cyrillic_ratio' in cfg:
-        all_letters=len(re.findall(r'[A-Za-zА-Яа-яЁё]',payload))
-        ratio=len(re.findall(r'[А-Яа-яЁё]',payload))/all_letters if all_letters else 0
+        ratio=letter_share(payload,r'[А-Яа-яЁё]')
         metrics['cyrillic_ratio']=round(ratio,4)
         require(ratio>cfg['cyrillic_ratio'],f'Cyrillic letter share {ratio:.3f}; need > {cfg["cyrillic_ratio"]}.')
     if 'paragraphs' in cfg:
@@ -196,9 +210,9 @@ def check(text: str, cfg: dict[str,Any], source: str | None=None) -> dict[str,An
                         word_band(value,band,label+' '+field)
                         require(not PREAMBLE_RE.search(value.strip()) and not re.search(r'</?(?:check|final)>|```',value),label+' '+field+': embedded wrapper/preamble detected.')
                         if field=='visual_prompt':
-                            require(not re.search(r'[А-Яа-яЁё]',value),label+': visual_prompt contains Cyrillic; use English.')
+                            require(english_visual(value),label+': visual_prompt must be predominantly ASCII English (heuristic; review language manually).')
                         else:
-                            require(bool(re.search(r'[А-Яа-яЁё]',value)),label+': narration must contain Russian text.')
+                            require(letter_share(value,r'[А-Яа-яЁё]') > .8,label+': narration must be predominantly Russian (>80% Cyrillic letters).')
                 total=sum(durations); metrics['duration_sum']=total
                 require(len(durations)==len(j) and total==cfg['duration_sum'],f'Duration sum {total}; need {cfg["duration_sum"]} with valid integer durations for all scenes.')
         if mode=='meta' and parsed:
@@ -228,6 +242,9 @@ def check(text: str, cfg: dict[str,Any], source: str | None=None) -> dict[str,An
 
 
 def main() -> int:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8')
     parser=argparse.ArgumentParser(description=__doc__)
     group=parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--task',choices=sorted(PRESETS))
@@ -250,7 +267,7 @@ def main() -> int:
         report=check(text,cfg,source)
         print(json.dumps(report,ensure_ascii=False,indent=2))
         return 0 if report['ok'] else 1
-    except (OSError,ValueError,TypeError,UnicodeError) as e:
+    except (OSError,ValueError,TypeError,UnicodeError,RecursionError) as e:
         print(json.dumps(dict(ok=False,error=str(e)),ensure_ascii=False),file=sys.stderr)
         return 2
 
