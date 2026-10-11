@@ -13,6 +13,7 @@ The rules come from a personal skill ("unslop-ui") that the repo owner's assista
 | `prompts/unslop-ui-untested.txt` | The 5-step process and ban list as a prompt |
 | `agnes_kit/unslop.py`, `unslop_check.py` | Offline static scanner for CSS, HTML, JSX/TSX, Vue, Svelte text |
 | `unslop/examples/` | `sloppy.css` (synthetic, trips most rules) and `clean.css` (trips none) |
+| `docs/unslop-phases.md` | The same rules split by phase, for the router |
 | `tests/test_unslop.py` | Tests for the scanner |
 
 ## Scanner
@@ -49,4 +50,4 @@ The `visual-render` lens in `qa-panel/perspectives.json` runs `unslop_check.py` 
 
 ## Not included
 
-No MCP tool or `check.py` constraint wraps the scanner yet. Text-writing slop (filler phrases, inflated vocabulary) is not covered by this feature.
+No MCP tool or `check.py` constraint wraps the scanner yet (the router tool `agnes_route` can serve the rules). Text-writing slop (filler phrases, inflated vocabulary) is not covered by this feature.

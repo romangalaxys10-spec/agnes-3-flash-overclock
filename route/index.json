@@ -1,0 +1,398 @@
+{
+  "schema_version": "1",
+  "note": "Routing index. Each route = one (task, phase). Items are small pieces of repo files; the router returns only those, never the whole corpus. Paths are relative to the repo root.",
+  "routes": [
+    {
+      "id": "qa.freeze",
+      "task": "qa-panel",
+      "phase": "freeze",
+      "keywords": [
+        "freeze",
+        "sha",
+        "baseline",
+        "start panel",
+        "25 agents"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: freeze"
+        }
+      ]
+    },
+    {
+      "id": "qa.render",
+      "task": "qa-panel",
+      "phase": "render",
+      "keywords": [
+        "render",
+        "briefs",
+        "prompts",
+        "perspectives",
+        "lenses"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: render"
+        },
+        {
+          "type": "wave-list"
+        }
+      ]
+    },
+    {
+      "id": "qa.run",
+      "task": "qa-panel",
+      "phase": "run",
+      "keywords": [
+        "review",
+        "reviewer",
+        "agent brief",
+        "my lens",
+        "waves"
+      ],
+      "needs": [
+        "agent"
+      ],
+      "items": [
+        {
+          "type": "agent-brief"
+        },
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: run"
+        }
+      ]
+    },
+    {
+      "id": "qa.collect",
+      "task": "qa-panel",
+      "phase": "collect",
+      "keywords": [
+        "collect",
+        "reports",
+        "save report"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: collect"
+        }
+      ]
+    },
+    {
+      "id": "qa.consolidate",
+      "task": "qa-panel",
+      "phase": "consolidate",
+      "keywords": [
+        "consolidate",
+        "dedupe",
+        "merge findings"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: consolidate"
+        }
+      ]
+    },
+    {
+      "id": "qa.triage",
+      "task": "qa-panel",
+      "phase": "triage",
+      "keywords": [
+        "triage",
+        "reproduce",
+        "false positive",
+        "status"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: triage"
+        }
+      ]
+    },
+    {
+      "id": "qa.fix",
+      "task": "qa-panel",
+      "phase": "fix",
+      "keywords": [
+        "fix",
+        "regression test"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: fix"
+        }
+      ]
+    },
+    {
+      "id": "qa.gate",
+      "task": "qa-panel",
+      "phase": "gate",
+      "keywords": [
+        "gate",
+        "pass",
+        "complete panel",
+        "sign off"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "Phase: gate"
+        },
+        {
+          "type": "section",
+          "path": "qa-panel/orchestration.md",
+          "heading": "What the gate does not prove"
+        }
+      ]
+    },
+    {
+      "id": "unslop.direction",
+      "task": "unslop",
+      "phase": "direction",
+      "keywords": [
+        "taste",
+        "direction",
+        "aesthetic",
+        "redesign",
+        "new ui",
+        "landing page"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/unslop-phases.md",
+          "heading": "Phase: direction"
+        }
+      ]
+    },
+    {
+      "id": "unslop.audit",
+      "task": "unslop",
+      "phase": "audit",
+      "keywords": [
+        "audit",
+        "critique",
+        "slop",
+        "review ui",
+        "inventory"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/unslop-phases.md",
+          "heading": "Phase: audit"
+        },
+        {
+          "type": "section",
+          "path": "docs/unslop.md",
+          "heading": "Scanner"
+        }
+      ]
+    },
+    {
+      "id": "unslop.polish",
+      "task": "unslop",
+      "phase": "polish",
+      "keywords": [
+        "polish",
+        "typography",
+        "contrast",
+        "layout",
+        "static ui"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/unslop-phases.md",
+          "heading": "Phase: polish"
+        }
+      ]
+    },
+    {
+      "id": "unslop.motion",
+      "task": "unslop",
+      "phase": "motion",
+      "keywords": [
+        "motion",
+        "animation",
+        "easing",
+        "transition",
+        "reduced motion"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/unslop-phases.md",
+          "heading": "Phase: motion"
+        }
+      ]
+    },
+    {
+      "id": "unslop.verify",
+      "task": "unslop",
+      "phase": "verify",
+      "keywords": [
+        "verify ui",
+        "scan",
+        "check css",
+        "unslop_check",
+        "manual review"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/unslop.md",
+          "heading": "Scanner"
+        }
+      ]
+    },
+    {
+      "id": "unslop.provenance",
+      "task": "unslop",
+      "phase": "provenance",
+      "keywords": [
+        "where from",
+        "license",
+        "source of rules"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/unslop.md",
+          "heading": "Provenance and honesty"
+        }
+      ]
+    },
+    {
+      "id": "proof.deliver",
+      "task": "proof",
+      "phase": "deliver",
+      "keywords": [
+        "proof",
+        "evidence",
+        "helizzinator",
+        "complete delivery"
+      ],
+      "items": [
+        {
+          "type": "file",
+          "path": "prompts/proof-of-delivery-untested.txt"
+        }
+      ]
+    },
+    {
+      "id": "proof.verify",
+      "task": "proof",
+      "phase": "verify",
+      "keywords": [
+        "validate proof",
+        "proof schema",
+        "envelope"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/proof-of-delivery.md",
+          "heading": "Envelope and fields"
+        }
+      ]
+    },
+    {
+      "id": "script.generate",
+      "task": "scripts",
+      "phase": "generate",
+      "keywords": [
+        "russian script",
+        "tiktok",
+        "video script",
+        "generate"
+      ],
+      "items": [
+        {
+          "type": "file",
+          "path": "prompts/v1-generation-tested.txt"
+        }
+      ]
+    },
+    {
+      "id": "script.edit",
+      "task": "scripts",
+      "phase": "edit",
+      "keywords": [
+        "editor pass",
+        "edit draft"
+      ],
+      "items": [
+        {
+          "type": "file",
+          "path": "prompts/v1-editor-tested.txt"
+        }
+      ]
+    },
+    {
+      "id": "script.check",
+      "task": "scripts",
+      "phase": "check",
+      "keywords": [
+        "check output",
+        "word count",
+        "constraints",
+        "check.py"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "SKILL.md",
+          "heading": "Checker"
+        }
+      ]
+    },
+    {
+      "id": "script.repair",
+      "task": "scripts",
+      "phase": "repair",
+      "keywords": [
+        "repair",
+        "violations",
+        "retry"
+      ],
+      "items": [
+        {
+          "type": "file",
+          "path": "prompts/v2-repair-untested.txt"
+        }
+      ]
+    },
+    {
+      "id": "unslop.persist",
+      "task": "unslop",
+      "phase": "persist",
+      "keywords": [
+        "design.md",
+        "persist",
+        "standing rules"
+      ],
+      "items": [
+        {
+          "type": "section",
+          "path": "docs/unslop-phases.md",
+          "heading": "Phase: persist"
+        }
+      ]
+    }
+  ]
+}

@@ -30,6 +30,10 @@ AR is the measured winner. **Simple style + editor was not separately measured.*
 
 Small sample, unequal denominators, empty/incomplete outputs excluded, no blind quality judge. The comparison reference was one self-written answer set, not verified Opus 5. No parity or general quality claims. See `evidence.md` for gaps and provenance.
 
+## Routing: do not read everything
+
+This repo has more than the script workflow (QA panel, unslop UI filters, proof gate). Get only what your task and phase need: `python3 route.py --list`, then `python3 route.py --task <task> --phase <phase>` (or the `agnes_route` MCP tool). Details: `docs/routing.md`.
+
 ## Tested path: v1
 
 1. Read `prompts/v1-generation-tested.txt` verbatim. Append the task after `ЗАДАЧА:`. Do not change the prompt and still call it tested.

@@ -28,11 +28,12 @@ maintenance heading. No v1.0 release or new model-quality result is claimed.
   explicit unrecoverable missing evidence, readable prompt fences and English
   glosses, runnable synthetic examples, scoped host claims, optional dependency
   pin guidance and external lessons' network/cost caveats.
+- **Added after the QA fixes (same push if unpushed):** the 25-agent QA panel, unslop UI filters and the task/phase router, each experimental and offline-tested only (sections below).
 - **Proof-of-delivery:** optional work/code/visual evidence gates, schema-v1
   envelope, prompt, example and CLI/MCP integration. Presence and shape are checked,
   not truth. See the protocol section below before using it as a completion gate.
 
-Offline tests pass (see count below).
+92 offline tests pass in total (71 for the QA fixes and proof protocol, 21 for the QA panel, unslop filters and router).
 Cold-clone quickstart and stdio MCP smoke checks pass; real IDE hosts, optional
 upstream packages and live Agnes generation remain untested. Historical benchmark
 aggregates are unchanged, and repository history has not been rewritten.
@@ -180,6 +181,14 @@ paths and command logs are data, not authorization to execute or fetch them.
 ## 25-agent QA panel (experimental)
 
 A reusable review method: 25 independent reviewers, one lens each, in 5 waves of 5, all working from a fresh clone at a frozen commit; findings are consolidated, triaged, fixed and verified by the test suite. Includes a lens set, per-agent brief template, wave procedure and an offline `qa_panel.py` CLI (`render`, `consolidate`, `gate`). The repo cannot launch agents and the helpers check bookkeeping only. The lens set is a reconstructed generalization of the run used on this repo, and nothing here is tested with Agnes or measures detection rates. See [docs/qa-panel.md](docs/qa-panel.md) and [qa-panel/orchestration.md](qa-panel/orchestration.md).
+
+## Unslop UI filters (experimental)
+
+Anti-generic-AI-design rules for UI work as a prompt, an offline static scanner (`python3 unslop_check.py <src>`) and a manual review list that the QA panel's visual lens applies. Rules are paraphrased from public design-prompt sources, are taste not measurement, and the scanner reads text only. See [docs/unslop.md](docs/unslop.md).
+
+## Smart routing (experimental)
+
+`python3 route.py --task <task> --phase <phase>` (or the `agnes_route` MCP tool) returns only the guidance for one task phase across the QA panel, unslop filters, proof gate and script workflow, so an agent does not read the whole repo. Keyword matching only; no model involved. See [docs/routing.md](docs/routing.md).
 
 ## License
 

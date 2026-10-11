@@ -21,7 +21,7 @@ class McpTests(unittest.TestCase):
                 {"jsonrpc": "2.0", "id": 5, "method": "nope"})
         self.assertEqual([x["id"] for x in r], [1, 2, 3, 4, 5])  # notification gets no reply
         self.assertEqual(r[0]["result"]["serverInfo"]["name"], "agnes-overclock")
-        self.assertEqual(len(r[1]["result"]["tools"]), 5)
+        self.assertEqual(len(r[1]["result"]["tools"]), 6)
         rep = json.loads(r[2]["result"]["content"][0]["text"])
         self.assertFalse(rep["ok"])
         self.assertTrue(r[3]["result"]["content"][0]["text"])

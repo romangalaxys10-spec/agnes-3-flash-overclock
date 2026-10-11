@@ -17,6 +17,8 @@ This method was used on this repository on 2026-10-10/11 (the "25-reviewer QA fi
 | `qa_panel.py`, `agnes_kit/qa_panel.py` | Offline CLI: `render`, `consolidate`, `gate` |
 | `tests/test_qa_panel.py` | Tests for the above |
 
+Phase-by-phase retrieval: `python3 route.py --task qa-panel --phase <freeze|render|run|collect|consolidate|triage|fix|gate>` (see `docs/routing.md`).
+
 ## Waves
 
 1. Correctness and backend. 2. Frontend, UX and flow. 3. Security and robustness. 4. Documentation and claims honesty. 5. Tests and cross-cutting, ending with an adversarial skeptic. Lenses that do not apply (for example visual rendering on a CLI-only project) should report "not applicable" with the evidence, or be swapped for a lens that fits.

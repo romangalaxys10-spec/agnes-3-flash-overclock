@@ -22,6 +22,9 @@ names describe evidence tiers, not software release versions. This is not v1.0.
 
 - Add the experimental 25-agent QA panel: `qa-panel/` (25-lens set, agent brief, wave orchestration, synthetic examples), `qa_panel.py` plus `agnes_kit/qa_panel.py` (render briefs, validate/consolidate reports, completeness and fix-status gate), `docs/qa-panel.md` and `tests/test_qa_panel.py`. Offline only; untested with live agents or Agnes.
 
+- Add experimental unslop UI filters: `prompts/unslop-ui-untested.txt`, `docs/unslop.md`, `docs/unslop-phases.md`, static scanner (`unslop_check.py`, `agnes_kit/unslop.py`), synthetic examples and tests; the QA `visual-render` lens now applies them.
+- Add task/phase smart router: `route/index.json`, `route.py`, `agnes_kit/router.py`, `docs/routing.md`, a sixth MCP tool `agnes_route`, and pointers in SKILL.md and AGENTS.md. Keyword matching only; no measured token or quality benefit.
+
 ### Detailed QA and feature inventory
 
 - Workflow: restore the benchmark generation body and preserve editor prompt

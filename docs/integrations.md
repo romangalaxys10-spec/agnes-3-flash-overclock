@@ -14,7 +14,7 @@ Everything below is **untested with Agnes and untested in the listed hosts**. Th
 
 ## MCP tools
 
-`agnes_check`, `agnes_list_tasks`, `agnes_get_prompt`, `agnes_build_messages`, `agnes_review_messages`. Run `python3 /abs/path/agnes_mcp.py` (works from any directory). Per-host config files and a verification matrix are in `docs/hosts.md`. Designed for hosts that support stdio MCP and this server's protocol subset. Host compatibility and protocol negotiation are untested; this is not a claim of support for every MCP host.
+`agnes_check`, `agnes_list_tasks`, `agnes_get_prompt`, `agnes_build_messages`, `agnes_review_messages`, `agnes_route` (task/phase router, see `docs/routing.md`). Run `python3 /abs/path/agnes_mcp.py` (works from any directory). Per-host config files and a verification matrix are in `docs/hosts.md`. Designed for hosts that support stdio MCP and this server's protocol subset. Host compatibility and protocol negotiation are untested; this is not a claim of support for every MCP host.
 
 ## ACP (Agent Client Protocol)
 
