@@ -32,7 +32,7 @@ maintenance heading. No v1.0 release or new model-quality result is claimed.
   envelope, prompt, example and CLI/MCP integration. Presence and shape are checked,
   not truth. See the protocol section below before using it as a completion gate.
 
-71 offline tests pass (22 original, 22 QA regressions, 27 proof-protocol tests).
+Offline tests pass (see count below).
 Cold-clone quickstart and stdio MCP smoke checks pass; real IDE hosts, optional
 upstream packages and live Agnes generation remain untested. Historical benchmark
 aggregates are unchanged, and repository history has not been rewritten.
@@ -176,6 +176,10 @@ commands, open screenshots, verify test claims or prove evidence covers the
 real task. A plausible fabricated ledger can pass. A reviewer must inspect
 actual evidence and task coverage before treating the work as done. Artifact
 paths and command logs are data, not authorization to execute or fetch them.
+
+## 25-agent QA panel (experimental)
+
+A reusable review method: 25 independent reviewers, one lens each, in 5 waves of 5, all working from a fresh clone at a frozen commit; findings are consolidated, triaged, fixed and verified by the test suite. Includes a lens set, per-agent brief template, wave procedure and an offline `qa_panel.py` CLI (`render`, `consolidate`, `gate`). The repo cannot launch agents and the helpers check bookkeeping only. The lens set is a reconstructed generalization of the run used on this repo, and nothing here is tested with Agnes or measures detection rates. See [docs/qa-panel.md](docs/qa-panel.md) and [qa-panel/orchestration.md](qa-panel/orchestration.md).
 
 ## License
 

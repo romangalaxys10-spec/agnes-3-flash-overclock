@@ -1,0 +1,206 @@
+{
+  "schema_version": "1",
+  "note": "Reference lens set. Adapt, rename or replace lenses for your codebase; keep 25 distinct agents if you claim a 25-agent panel.",
+  "perspectives": [
+    {
+      "id": "correctness-core",
+      "number": 1,
+      "wave": 1,
+      "wave_name": "Wave 1 - Correctness and backend",
+      "name": "Core logic correctness",
+      "focus": "Trace main code paths against stated behavior; off-by-one, wrong denominators, unhandled branches."
+    },
+    {
+      "id": "edge-inputs",
+      "number": 2,
+      "wave": 1,
+      "wave_name": "Wave 1 - Correctness and backend",
+      "name": "Edge-case inputs",
+      "focus": "Empty, huge, malformed, non-ASCII, deeply nested and boundary inputs; exit codes."
+    },
+    {
+      "id": "api-clients",
+      "number": 3,
+      "wave": 1,
+      "wave_name": "Wave 1 - Correctness and backend",
+      "name": "API and network clients",
+      "focus": "Timeouts, retries, redirects, TLS, key handling, error propagation."
+    },
+    {
+      "id": "storage-state",
+      "number": 4,
+      "wave": 1,
+      "wave_name": "Wave 1 - Correctness and backend",
+      "name": "Storage and state",
+      "focus": "Atomic writes, schema drift, concurrency, partial failure, cleanup."
+    },
+    {
+      "id": "protocol-contracts",
+      "number": 5,
+      "wave": 1,
+      "wave_name": "Wave 1 - Correctness and backend",
+      "name": "Protocol and interface contracts",
+      "focus": "CLI, JSON-RPC/MCP and schema validation versus documented contracts."
+    },
+    {
+      "id": "first-run-flow",
+      "number": 6,
+      "wave": 2,
+      "wave_name": "Wave 2 - Frontend, UX and flow",
+      "name": "First-run flow",
+      "focus": "Follow the quickstart cold, copy-paste every command, note each friction or failure."
+    },
+    {
+      "id": "cli-ux",
+      "number": 7,
+      "wave": 2,
+      "wave_name": "Wave 2 - Frontend, UX and flow",
+      "name": "CLI and output UX",
+      "focus": "Messages, exit codes, readability, console encodings, actionable errors."
+    },
+    {
+      "id": "host-integration",
+      "number": 8,
+      "wave": 2,
+      "wave_name": "Wave 2 - Frontend, UX and flow",
+      "name": "Host and IDE integration",
+      "focus": "Config files per host, paths, working directory assumptions, scoped compatibility claims."
+    },
+    {
+      "id": "visual-render",
+      "number": 9,
+      "wave": 2,
+      "wave_name": "Wave 2 - Frontend, UX and flow",
+      "name": "Visual and rendering",
+      "focus": "Any UI, rendered docs, tables, screenshots; contrast, layout, overflow. Mark N/A if none."
+    },
+    {
+      "id": "accessibility-i18n",
+      "number": 10,
+      "wave": 2,
+      "wave_name": "Wave 2 - Frontend, UX and flow",
+      "name": "Accessibility and i18n",
+      "focus": "Unicode, locale, screen-reader-friendly output, language assumptions."
+    },
+    {
+      "id": "secrets-privacy",
+      "number": 11,
+      "wave": 3,
+      "wave_name": "Wave 3 - Security and robustness",
+      "name": "Secrets and privacy",
+      "focus": "Keys, tokens, emails, personal data in files, logs and git history."
+    },
+    {
+      "id": "injection-trust",
+      "number": 12,
+      "wave": 3,
+      "wave_name": "Wave 3 - Security and robustness",
+      "name": "Injection and trust boundaries",
+      "focus": "Untrusted input into prompts, shells, paths, deserialization."
+    },
+    {
+      "id": "supply-chain",
+      "number": 13,
+      "wave": 3,
+      "wave_name": "Wave 3 - Security and robustness",
+      "name": "Dependencies and supply chain",
+      "focus": "Pins, licenses, vendored code provenance, optional installs."
+    },
+    {
+      "id": "failure-modes",
+      "number": 14,
+      "wave": 3,
+      "wave_name": "Wave 3 - Security and robustness",
+      "name": "Failure modes",
+      "focus": "Crash, kill, disk full, network down; fail-closed versus silent corruption."
+    },
+    {
+      "id": "abuse-limits",
+      "number": 15,
+      "wave": 3,
+      "wave_name": "Wave 3 - Security and robustness",
+      "name": "Abuse and resource limits",
+      "focus": "Cost runaway, unbounded loops, rate limits, size limits."
+    },
+    {
+      "id": "docs-accuracy",
+      "number": 16,
+      "wave": 4,
+      "wave_name": "Wave 4 - Documentation and claims honesty",
+      "name": "Documentation accuracy",
+      "focus": "Every documented command, path and number versus the code and tree."
+    },
+    {
+      "id": "claims-evidence",
+      "number": 17,
+      "wave": 4,
+      "wave_name": "Wave 4 - Documentation and claims honesty",
+      "name": "Claims versus evidence",
+      "focus": "Each quality, benchmark or compatibility claim has evidence or an untested label."
+    },
+    {
+      "id": "onboarding",
+      "number": 18,
+      "wave": 4,
+      "wave_name": "Wave 4 - Documentation and claims honesty",
+      "name": "Onboarding and examples",
+      "focus": "Examples run, fixtures present in a cold clone, prerequisites stated."
+    },
+    {
+      "id": "changelog-versioning",
+      "number": 19,
+      "wave": 4,
+      "wave_name": "Wave 4 - Documentation and claims honesty",
+      "name": "Changelog and versioning",
+      "focus": "Changelog matches the diff; version identifiers consistent."
+    },
+    {
+      "id": "license-attribution",
+      "number": 20,
+      "wave": 4,
+      "wave_name": "Wave 4 - Documentation and claims honesty",
+      "name": "License and attribution",
+      "focus": "Licenses, third-party notices, copied content provenance."
+    },
+    {
+      "id": "test-coverage",
+      "number": 21,
+      "wave": 5,
+      "wave_name": "Wave 5 - Tests and cross-cutting",
+      "name": "Test coverage",
+      "focus": "Untested branches, tests that cannot fail, missing regressions for fixed bugs."
+    },
+    {
+      "id": "test-reliability",
+      "number": 22,
+      "wave": 5,
+      "wave_name": "Wave 5 - Tests and cross-cutting",
+      "name": "Test reliability",
+      "focus": "Flakiness, order dependence, network or time dependence, platform assumptions."
+    },
+    {
+      "id": "reproducibility",
+      "number": 23,
+      "wave": 5,
+      "wave_name": "Wave 5 - Tests and cross-cutting",
+      "name": "Reproducibility",
+      "focus": "Fresh clone at the frozen SHA builds and passes; no hidden local state."
+    },
+    {
+      "id": "maintainability",
+      "number": 24,
+      "wave": 5,
+      "wave_name": "Wave 5 - Tests and cross-cutting",
+      "name": "Maintainability",
+      "focus": "Dead code, duplication, naming, module boundaries, hard-coded values."
+    },
+    {
+      "id": "adversarial-skeptic",
+      "number": 25,
+      "wave": 5,
+      "wave_name": "Wave 5 - Tests and cross-cutting",
+      "name": "Adversarial skeptic",
+      "focus": "Try to break the other lenses' assumptions; hunt what no other lens covers."
+    }
+  ]
+}

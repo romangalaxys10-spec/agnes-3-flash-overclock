@@ -1,0 +1,13 @@
+{
+  "agent": "docs-accuracy",
+  "base_sha": "c7d4f39",
+  "reviewed_clean_clone": true,
+  "findings": [
+    {
+      "title": "Example: crashes on empty input",
+      "severity": "minor",
+      "file": "example/app.py",
+      "evidence": "SYNTHETIC EXAMPLE, not a real finding."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "agent": "edge-inputs",
+  "base_sha": "c7d4f39",
+  "reviewed_clean_clone": true,
+  "findings": [
+    {
+      "title": "Example: empty input crashes",
+      "severity": "major",
+      "file": "example/app.py",
+      "line": 10,
+      "evidence": "SYNTHETIC EXAMPLE, not a real finding."
+    }
+  ]
+}

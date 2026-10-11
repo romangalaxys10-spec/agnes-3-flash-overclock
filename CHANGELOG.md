@@ -20,6 +20,8 @@ names describe evidence tiers, not software release versions. This is not v1.0.
   work manifest/hashes/command logs, code diff/test records, visual inspection
   assertions, CLI/MCP examples and rejection regressions. Presence is not truth.
 
+- Add the experimental 25-agent QA panel: `qa-panel/` (25-lens set, agent brief, wave orchestration, synthetic examples), `qa_panel.py` plus `agnes_kit/qa_panel.py` (render briefs, validate/consolidate reports, completeness and fix-status gate), `docs/qa-panel.md` and `tests/test_qa_panel.py`. Offline only; untested with live agents or Agnes.
+
 ### Detailed QA and feature inventory
 
 - Workflow: restore the benchmark generation body and preserve editor prompt
