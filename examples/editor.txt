@@ -1,0 +1,39 @@
+<check>Синтетический пример, не результат модели.</check>
+<final>[
+  {
+    "scene": 1,
+    "narration": "русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское ",
+    "visual_prompt": "cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic ",
+    "duration_sec": 10
+  },
+  {
+    "scene": 2,
+    "narration": "русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское ",
+    "visual_prompt": "cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic ",
+    "duration_sec": 10
+  },
+  {
+    "scene": 3,
+    "narration": "русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское ",
+    "visual_prompt": "cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic ",
+    "duration_sec": 10
+  },
+  {
+    "scene": 4,
+    "narration": "русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское ",
+    "visual_prompt": "cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic ",
+    "duration_sec": 10
+  },
+  {
+    "scene": 5,
+    "narration": "русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское ",
+    "visual_prompt": "cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic ",
+    "duration_sec": 10
+  },
+  {
+    "scene": 6,
+    "narration": "русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское русское ",
+    "visual_prompt": "cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic cinematic ",
+    "duration_sec": 10
+  }
+]</final>

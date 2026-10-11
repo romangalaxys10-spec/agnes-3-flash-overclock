@@ -60,5 +60,3 @@ class CheckerQaTests(unittest.TestCase):
                 out=self.cli(args)
                 self.assertEqual(out.returncode,2)
                 self.assertFalse(json.loads(out.stderr)['ok'])
-
-

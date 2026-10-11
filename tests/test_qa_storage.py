@@ -62,5 +62,3 @@ class StorageQaTests(unittest.TestCase):
             self.assertNotIn('private B',messages[1]['content'])
             with self.assertRaises(ValueError):lessons.relevant('task',min_relevance=0)
             with self.assertRaises(ValueError):build_generation_messages('task',lessons=['raw'],lesson_store=lessons)
-
-

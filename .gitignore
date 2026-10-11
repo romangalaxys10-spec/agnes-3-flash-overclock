@@ -7,3 +7,8 @@ draft.txt
 editor.txt
 source.txt
 raw.json
+
+# Shipped offline quickstart fixtures must remain in cold checkouts.
+!examples/draft.txt
+!examples/source.txt
+!examples/editor.txt

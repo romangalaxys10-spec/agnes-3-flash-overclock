@@ -57,5 +57,3 @@ class PromptAndClientTests(unittest.TestCase):
         response = handle({'jsonrpc':'2.0','id':1,'method':'initialize'})
         self.assertEqual(version, '0.1.0')
         self.assertEqual(response['result']['serverInfo']['version'], version)
-
-
