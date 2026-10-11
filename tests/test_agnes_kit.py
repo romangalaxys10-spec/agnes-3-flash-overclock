@@ -1,4 +1,5 @@
 import json, sys, tempfile, unittest
+from unittest.mock import patch
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from agnes_kit import (FileLessons, FileMemory, HeadroomTokenSaver, Mem0Memory,
@@ -36,13 +37,11 @@ class KitTests(unittest.TestCase):
         self.assertIn("bug", review_messages("diff")[0]["content"].lower())
 
     def test_optional_deps_fail_clearly(self):
-        for cls in (HeadroomTokenSaver, Mem0Memory):
-            try:
-                cls()
-            except RuntimeError as e:
-                self.assertIn("pip install", str(e))
-            except Exception:
-                pass  # package present: constructor may need its own config
+        # Deterministically test the absent-package path, not arbitrary constructor failures.
+        for cls, module in ((HeadroomTokenSaver, "headroom"), (Mem0Memory, "mem0")):
+            with patch.dict(sys.modules, {module: None}):
+                with self.assertRaisesRegex(RuntimeError, "pip install"):
+                    cls()
 
 
 if __name__ == "__main__":

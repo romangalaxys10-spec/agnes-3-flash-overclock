@@ -5,10 +5,13 @@ Interfaces (duck-typed):
   token saver : compress(messages) -> messages
   memory      : add(text, user_id) -> None ; search(query, user_id, top_k) -> list[str]
   lessons     : save(task, feedback) -> None ; relevant(task, max_items) -> list[str]
+  FileLessons additionally scopes save/relevant by user_id and a relevance threshold.
 """
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 import re
 from pathlib import Path
 
@@ -53,7 +56,7 @@ class HeadroomTokenSaver:
 # ---- memory (mem0, Apache-2.0, optional external dependency) ----
 
 class FileMemory:
-    """Stdlib JSON memory with word-overlap ranking. Default, offline."""
+    """Stdlib JSON memory with word-overlap ranking. Offline, atomic single-writer store."""
 
     def __init__(self, path: str | Path = "memory_store.json"):
         self.path = Path(path)
@@ -65,12 +68,30 @@ class FileMemory:
             data = json.loads(self.path.read_text("utf-8"))
         except (json.JSONDecodeError, UnicodeError) as exc:
             raise ValueError(f"{self.path} is not valid JSON; fix or delete it") from exc
-        return data if isinstance(data, list) else []
+        if not isinstance(data, list) or any(
+            not isinstance(row, dict) or set(row) != {"user_id", "text"}
+            or not isinstance(row["user_id"], str) or not isinstance(row["text"], str)
+            for row in data
+        ):
+            raise ValueError(f"{self.path} has an unrecognized memory schema; refusing to overwrite")
+        return data
 
     def add(self, text: str, user_id: str = "default") -> None:
         items = self._load()
         items.append({"user_id": user_id, "text": text})
-        self.path.write_text(json.dumps(items, ensure_ascii=False, indent=1), "utf-8")
+        # Same-directory temporary file keeps replace atomic on this filesystem.
+        tmp = None
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=self.path.parent,
+                                             prefix=self.path.name + ".", suffix=".tmp", delete=False) as f:
+                tmp = Path(f.name)
+                json.dump(items, f, ensure_ascii=False, indent=1)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp, self.path)
+        finally:
+            if tmp is not None:
+                tmp.unlink(missing_ok=True)
 
     def search(self, query: str, user_id: str = "default", top_k: int = 3) -> list[str]:
         scored = [(_overlap(query, i["text"]), i["text"]) for i in self._load() if i["user_id"] == user_id]
@@ -105,15 +126,21 @@ class FileLessons:
     def __init__(self, path: str | Path = "lessons.json"):
         self._mem = FileMemory(path)
 
-    def save(self, task: str, feedback: str) -> None:
-        self._mem.add(json.dumps({"task": task, "feedback": feedback}, ensure_ascii=False))
+    def save(self, task: str, feedback: str, user_id: str = "default") -> None:
+        self._mem.add(json.dumps({"task": task, "feedback": feedback}, ensure_ascii=False), user_id)
 
-    def relevant(self, task: str, max_items: int = 2) -> list[str]:
+    def relevant(self, task: str, max_items: int = 2, user_id: str = "default", min_relevance: float = .5) -> list[str]:
+        if not 0 < min_relevance <= 1:
+            raise ValueError("min_relevance must be in (0, 1]")
         out = []
         for raw in self._mem._load():
+            if raw["user_id"] != user_id:
+                continue
             d = json.loads(raw["text"])
+            if not isinstance(d, dict) or set(d) != {"task", "feedback"} or any(not isinstance(v, str) for v in d.values()):
+                raise ValueError("unrecognized lesson schema")
             out.append((_overlap(task, d["task"]), d["feedback"]))
-        return [f for s, f in sorted(out, reverse=True) if s > 0][:max_items]
+        return [f for s, f in sorted(out, reverse=True) if s >= min_relevance][:max_items]
 
 
 class SelfLearningLessons:

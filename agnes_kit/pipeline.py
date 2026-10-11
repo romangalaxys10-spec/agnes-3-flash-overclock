@@ -3,7 +3,6 @@ The tested v1 prompts are used verbatim. Everything extra is optional and UNTEST
 from __future__ import annotations
 
 import re
-from pathlib import Path
 
 from .adapters import ROOT
 
@@ -17,9 +16,13 @@ def load_skill(name: str) -> str:
     return re.sub(r"\A---\n.*?\n---\n", "", text, count=1, flags=re.S).strip()
 
 
-def build_generation_messages(task: str, *, memories=(), lessons=(), token_saver=None) -> list[dict]:
+def build_generation_messages(task: str, *, memories=(), lessons=(), lesson_store=None, user_id="default", token_saver=None) -> list[dict]:
     """v1 generation prompt + task. Memories/lessons are appended as a labeled
     block only when given (UNTESTED: the measured v1 had none)."""
+    if lesson_store is not None:
+        if lessons:
+            raise ValueError("provide explicit lessons or lesson_store, not both")
+        lessons = lesson_store.relevant(task, user_id=user_id)
     system = (ROOT / "prompts" / "v1-generation-tested.txt").read_text("utf-8")
     extra = []
     if memories:
