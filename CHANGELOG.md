@@ -25,6 +25,8 @@ names describe evidence tiers, not software release versions. This is not v1.0.
 - Add experimental unslop UI filters: `prompts/unslop-ui-untested.txt`, `docs/unslop.md`, `docs/unslop-phases.md`, static scanner (`unslop_check.py`, `agnes_kit/unslop.py`), synthetic examples and tests; an optional `ui-slop` QA lens (`--with-optional`) applies them.
 - Add task/phase smart router: `route/index.json`, `route.py`, `agnes_kit/router.py`, `docs/routing.md`, a sixth MCP tool `agnes_route`, and pointers in SKILL.md and AGENTS.md. Keyword matching only; no measured token or quality benefit.
 
+- Embed the public Jack Gross agentic router: new `jg-prompts` / `jg-mcp` / `jg-extensions` remote routes (`agnes_kit/jg_router.py`, `remote` item type in `route/index.json`) fetch one small live markdown slice per collection+phase from jackgross-five.vercel.app over plain HTTPS GET - no keys, no user data sent - with a 24h on-disk cache (`AGNES_JG_CACHE`), `--offline`/`offline=true` cache-only mode, `--refresh`, `[cache]` source marking and an `unavailable` status (never invented content) when the site is unreachable and uncached. External-dependency and keyword-matching limits documented in `docs/routing.md`; tests stub the network, live smoke test is opt-in (`AGNES_LIVE_TEST=1`).
+
 ### Detailed QA and feature inventory
 
 - Workflow: restore the benchmark generation body and preserve editor prompt

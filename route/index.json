@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "note": "Routing index. Each route = one (task, phase). Items are small pieces of repo files; the router returns only those, never the whole corpus. Paths are relative to the repo root.",
+  "note": "Routing index. Each route = one (task, phase). Items are small pieces of repo files; the router returns only those, never the whole corpus. Paths are relative to the repo root. Items of type 'remote' (tasks jg-*) fetch one small markdown slice from the public Jack Gross router over HTTPS (plain GET, no keys, no user data sent), with on-disk cache and offline fallback; see docs/routing.md and agnes_kit/jg_router.py.",
   "routes": [
     {
       "id": "qa.freeze",
@@ -391,6 +391,189 @@
           "type": "section",
           "path": "docs/unslop-phases.md",
           "heading": "Phase: persist"
+        }
+      ]
+    },
+    {
+      "id": "jg-prompts.select",
+      "task": "jg-prompts",
+      "phase": "select",
+      "keywords": [
+        "prompt library",
+        "find a prompt",
+        "prompt collection",
+        "writing prompt",
+        "blog prompts",
+        "prompts database",
+        "pick prompt"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "prompts",
+          "phase": "select"
+        }
+      ]
+    },
+    {
+      "id": "jg-prompts.fill",
+      "task": "jg-prompts",
+      "phase": "fill",
+      "keywords": [
+        "fill prompt",
+        "prompt template",
+        "customize prompt",
+        "prompt variables"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "prompts",
+          "phase": "fill"
+        }
+      ]
+    },
+    {
+      "id": "jg-prompts.verify",
+      "task": "jg-prompts",
+      "phase": "verify",
+      "keywords": [
+        "verify prompt",
+        "test a prompt",
+        "prompt output check"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "prompts",
+          "phase": "verify"
+        }
+      ]
+    },
+    {
+      "id": "jg-mcp.discover",
+      "task": "jg-mcp",
+      "phase": "discover",
+      "keywords": [
+        "mcp server",
+        "find mcp",
+        "mcp registry",
+        "discover servers",
+        "tool server",
+        "server for"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "mcp",
+          "phase": "discover"
+        }
+      ]
+    },
+    {
+      "id": "jg-mcp.evaluate",
+      "task": "jg-mcp",
+      "phase": "evaluate",
+      "keywords": [
+        "evaluate mcp",
+        "mcp license",
+        "mcp quality",
+        "trust this server"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "mcp",
+          "phase": "evaluate"
+        }
+      ]
+    },
+    {
+      "id": "jg-mcp.install",
+      "task": "jg-mcp",
+      "phase": "install",
+      "keywords": [
+        "install mcp",
+        "mcp config",
+        "stdio config",
+        "add mcp server"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "mcp",
+          "phase": "install"
+        }
+      ]
+    },
+    {
+      "id": "jg-mcp.secure",
+      "task": "jg-mcp",
+      "phase": "secure",
+      "keywords": [
+        "secure mcp",
+        "mcp security",
+        "mcp risks",
+        "mcp permissions"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "mcp",
+          "phase": "secure"
+        }
+      ]
+    },
+    {
+      "id": "jg-extensions.latest",
+      "task": "jg-extensions",
+      "phase": "latest",
+      "keywords": [
+        "latest extensions",
+        "extension news",
+        "mcp news",
+        "skills news",
+        "extensions digest"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "extensions",
+          "phase": "latest"
+        }
+      ]
+    },
+    {
+      "id": "jg-extensions.lookup",
+      "task": "jg-extensions",
+      "phase": "lookup",
+      "keywords": [
+        "lookup extension",
+        "find extension",
+        "extension digest post"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "extensions",
+          "phase": "lookup"
+        }
+      ]
+    },
+    {
+      "id": "jg-extensions.verify",
+      "task": "jg-extensions",
+      "phase": "verify",
+      "keywords": [
+        "verify extension",
+        "confirm extension news",
+        "check extension claim"
+      ],
+      "items": [
+        {
+          "type": "remote",
+          "collection": "extensions",
+          "phase": "verify"
         }
       ]
     }

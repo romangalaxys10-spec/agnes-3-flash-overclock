@@ -7,10 +7,14 @@ import json
 import re
 from pathlib import Path
 
-from . import qa_panel
+from . import jg_router, qa_panel
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_ITEM_BYTES = 6000
+
+
+class RemoteUnavailable(Exception):
+    """A remote (Jack Gross router) slice could be served neither live nor from cache."""
 
 
 def load_index(path=None):
@@ -57,6 +61,16 @@ def _item(it, args):
     t = it["type"]
     if t == "file":
         return it["path"], _safe(it["path"]).read_text(encoding="utf-8")
+    if t == "remote":
+        try:
+            text, meta = jg_router.fetch(it["collection"], it["phase"],
+                                         offline=args.get("offline", False),
+                                         refresh=args.get("refresh", False),
+                                         fetcher=args.get("fetcher"))
+        except jg_router.Unavailable as e:
+            raise RemoteUnavailable(str(e)) from e
+        name = meta["url"] + (" [cache]" if meta["status"] == "cache" else "")
+        return name, text
     if t == "section":
         return f"{it['path']}#{it['heading']}", extract_section(_safe(it["path"]).read_text(encoding="utf-8"), it["heading"])
     persp = qa_panel.load_perspectives(with_optional=True)
@@ -92,7 +106,8 @@ def _score(route, query):
     return s
 
 
-def route(task=None, phase=None, query=None, agent=None, base_sha=None, repo_url=None, idx=None):
+def route(task=None, phase=None, query=None, agent=None, base_sha=None, repo_url=None, idx=None,
+            offline=False, refresh=False, fetcher=None):
     """Resolve to one route and return only its items. Exact task+phase wins; otherwise a query is
     scored. A tie or a weak match returns candidates and no content."""
     idx = idx or load_index()
@@ -112,13 +127,20 @@ def route(task=None, phase=None, query=None, agent=None, base_sha=None, repo_url
         chosen = top[0][1]
     else:
         return {"status": "need-input", "message": "give task+phase, or a query", "available": list_routes(idx)}
-    args = {"agent": agent, "base_sha": base_sha, "repo_url": repo_url}
+    args = {"agent": agent, "base_sha": base_sha, "repo_url": repo_url,
+            "offline": offline, "refresh": refresh, "fetcher": fetcher}
     missing = [n for n in chosen.get("needs", []) if not args.get(n)]
     if missing:
         return {"status": "need-input", "route": chosen["id"], "message": f"missing required: {', '.join(missing)}"}
     items, total = [], 0
     for it in chosen["items"]:
-        name, text = _item(it, args)
+        try:
+            name, text = _item(it, args)
+        except RemoteUnavailable as e:
+            return {"status": "unavailable", "route": chosen["id"], "task": chosen["task"],
+                    "phase": chosen["phase"],
+                    "message": f"remote slice unavailable: {e}",
+                    "hint": "run online once to populate the cache, or fetch the URL in the message directly"}
         if len(text.encode()) > MAX_ITEM_BYTES:
             raise ValueError(f"routed item too large ({name}); split the source section")
         items.append({"source": name, "content": text})
