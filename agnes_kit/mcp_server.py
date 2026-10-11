@@ -13,7 +13,6 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
-from pathlib import Path
 
 from .adapters import ROOT
 from .pipeline import build_generation_messages, review_messages
@@ -45,13 +44,15 @@ TOOLS = [
 
 def call_tool(name: str, a: dict):
     if name == "agnes_check":
+        if ("task" in a) == ("config" in a):
+            raise ValueError("provide exactly one of task or config")
         text = a["text"]
         if a.get("extract_final"):
             try:
                 text = _check.extract_final(text)
             except ValueError as e:
                 return dict(ok=False, violations=[str(e)])
-        cfg = _check.PRESETS[a["task"]] if a.get("task") else a.get("config")
+        cfg = _check.PRESETS[a["task"]] if "task" in a else a["config"]
         if cfg is None:
             raise ValueError("provide task or config")
         _check.validate_config(cfg)
@@ -73,6 +74,8 @@ def handle(req: dict):
     if not isinstance(req, dict):
         return {"jsonrpc": "2.0", "id": None, "error": {"code": -32600, "message": "invalid request (batches are not supported)"}}
     rid, method = req.get("id"), req.get("method", "")
+    if req.get("jsonrpc") != "2.0" or not isinstance(method, str) or not method:
+        return {"jsonrpc": "2.0", "id": rid, "error": {"code": -32600, "message": "invalid JSON-RPC 2.0 request"}}
     if rid is None:
         return None
     def ok(result): return {"jsonrpc": "2.0", "id": rid, "result": result}
