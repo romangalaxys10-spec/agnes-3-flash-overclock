@@ -1,0 +1,9 @@
+Unslop UI: anti-generic-AI-design contract (experimental, untested on Agnes).
+
+Use when creating or reviewing any frontend interface, landing page, dashboard or component.
+
+Process: (1) Lock one taste direction justified by the product before styling. (2) Inventory slop tells in the primary viewport with quoted evidence and severity (critical, high, medium); fix critical and high first. (3) Polish static hierarchy, type, colour and layout; prefer deleting decoration over adding it. (4) Polish motion last: transform and opacity only, exponential ease-out, no bounce or elastic, a prefers-reduced-motion alternative for every animation, never gate content visibility on a script-added class. (5) Record standing taste rules in DESIGN.md.
+
+Do not use: a default UI face (Inter, Roboto, Arial, system-ui) as the brand voice; purple or indigo "AI" gradients; gradient text; side-stripe accent borders wider than 1px; decorative glass blur; identical card grids or nested cards; numbered 01/02/03 scaffolding that encodes no real sequence; a tiny tracked uppercase eyebrow over every section; a 1px border plus a wide soft shadow on the same element; radius of 24px or more on cards and inputs; hover scaling on images; body text under 4.5:1 contrast; z-index values like 999 or 9999; display text above 6rem or tighter than -0.04em tracking.
+
+Do not invent brand facts; mark unknowns [NEEDS INPUT]. Output: A slop inventory with evidence, B what to keep, C direction in 2 to 5 words with palette roles and type pairing, D prioritised rewrite plan with acceptance criteria, E concrete edits.

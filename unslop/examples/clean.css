@@ -1,0 +1,5 @@
+/* Synthetic example with none of the detected tells. Does not prove the design is good. */
+body { font-family: "Source Serif 4", Georgia, serif; color: #1a1a1a; background: #ffffff; }
+.card { border: 1px solid #d8d8d8; border-radius: 12px; transition: background-color .2s cubic-bezier(.25,1,.5,1); }
+.card:hover { background-color: #f4f4f4; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }

@@ -1,0 +1,8 @@
+/* Synthetic example of slop tells. Not from a real product. */
+body { font-family: Inter, sans-serif; }
+.hero h1 { background: linear-gradient(90deg, #6366f1, #a855f7); -webkit-background-clip: text; color: transparent; letter-spacing: -0.06em; }
+.card { border: 1px solid #ddd; box-shadow: 0 10px 40px rgba(0,0,0,.15); border-radius: 28px; }
+.callout { border-left: 4px solid #6366f1; }
+.card img:hover { transform: scale(1.1); transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
+.muted { color: #aaaaaa; background: #ffffff; }
+.modal { z-index: 9999; }

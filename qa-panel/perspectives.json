@@ -72,7 +72,7 @@
       "wave": 2,
       "wave_name": "Wave 2 - Frontend, UX and flow",
       "name": "Visual and rendering",
-      "focus": "Any UI, rendered docs, tables, screenshots; contrast, layout, overflow. Mark N/A if none."
+      "focus": "Any UI, rendered docs, tables, screenshots; contrast, layout, overflow. For UI code run `python3 unslop_check.py <src>` and apply the manual list in docs/unslop.md. Mark N/A if there is no UI."
     },
     {
       "id": "accessibility-i18n",
