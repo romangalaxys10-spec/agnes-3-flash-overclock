@@ -28,23 +28,23 @@ Python 3.10+; standard library only. No API key, dependencies, or network access
 git clone https://github.com/romangalaxys10-spec/agnes-3-flash-overclock.git
 cd agnes-3-flash-overclock
 python3 -m unittest discover -s tests -v
-python3 check.py --task T1_script60 --input draft.txt
+python3 check.py --task T1_script60 --input examples/draft.txt
 ```
 
-Save the exact model payload as UTF-8 `draft.txt` first. The checker does not call Agnes or generate text.
+The `examples/` files are synthetic passing fixtures, not model or benchmark outputs. For your own output, save the exact model payload as UTF-8 `draft.txt` and replace the example path. The checker does not call Agnes or generate text.
 
 ```bash
 # Source-preserving rewrite
-python3 check.py --task T5_rewrite --input draft.txt --source source.txt
+python3 check.py --task T5_rewrite --input examples/rewrite.txt --source examples/source.txt
 
 # Explicitly extract a tested v1 final block before checking
-python3 check.py --task T2_scenejson --input editor.txt --extract-final
+python3 check.py --task T2_scenejson --input examples/editor.txt --extract-final
 
 # Your own constraints
-python3 check.py --config constraints.example.json --input draft.txt --source source.txt
+python3 check.py --config constraints.example.json --input examples/rewrite.txt --source examples/source.txt
 ```
 
-Exit codes: `0` passes structural checks; `1` reports violations; `2` reports a configuration or I/O error. The JSON report contains counts, exact violations, manual-review warnings, and the checked payload.
+Exit codes: `0` passes structural checks; `1` reports violations; `2` reports a configuration, I/O or deeply nested JSON error. Console reports use UTF-8, including on Windows. The JSON report contains counts, exact violations, manual-review warnings, and the checked payload.
 
 ## Two workflows, clearly separated
 
@@ -65,7 +65,7 @@ The prompts correspond to the measured two-pass condition. The stricter local ch
 4. Recheck every replacement. Stop after at most two repair calls.
 5. Review facts and voice even when the code passes.
 
-This repository supplies prompts and an offline checker, **not an API client or automated orchestration service**. Choose your own model access and verify its current billing and limits before running it.
+This repository supplies prompts and an offline checker, plus an **untested generic OpenAI-compatible API client example** at `integrations/generic/openai_compatible.py`. It is not a hosted orchestration service. Choose your own model access and verify its current billing and limits before running it.
 
 ## Extensions (all UNTESTED with Agnes)
 
@@ -86,13 +86,13 @@ None of these extensions were benchmarked. The 84% / 71% / 88% results cover onl
 - `check.py`: word bands, strict JSON, scene durations, paragraph constraints, numeric literals, and wrapper/preamble checks.
 - `tasks.json`: six original Russian evaluation tasks.
 - `constraints.example.json`: custom-constraint example.
-- `tests/`: 14 offline regression tests for the checker (`test_check.py`), plus 7 for the optional extras (`test_agnes_kit.py`, `test_mcp.py`).
+- `tests/`: 44 offline regression tests: 21 checker tests and 23 adapter/client/MCP tests, including 22 regressions added by the 25-reviewer QA fixes. The original optional-extra suite has 8 cases (22 original tests total).
 - `docs/benchmark-report.md`: public-safe benchmark pack, original scorer excerpt, and caveats.
 - `evidence.md` and `verification.md`: evidence boundary and local verification.
 
 ## Limits worth keeping
 
-A code pass does not prove truth. Numeric checks compare literal sets, not associations or occurrence counts. They cannot catch every spelled-out invented number, name, fabricated study, or altered fact. Sentence and preamble checks are heuristics. Human factual and voice review remains required.
+A code pass does not prove truth. Numeric checks compare literal sets, not associations or occurrence counts. They cannot catch every spelled-out invented number, name, fabricated study, or altered fact. Sentence, preamble and scene-language checks are heuristics. T2 narration requires >80% Russian Cyrillic letters among all Unicode letters; visual descriptions require >=90% ASCII letters, no Russian Cyrillic, and an English visual-description anchor. This rejects obvious non-English text but cannot identify every language; review language manually. Human factual and voice review remains required.
 
 The new checker is stricter than the old scorer, so its results must not replace the published aggregate scores. Raw run outputs and full reference answers are not included; the historical scores cannot be fully reproduced from this release alone.
 

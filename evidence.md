@@ -2,7 +2,9 @@
 
 ## Benchmark, 2026-10-10
 
-Source: `docs/benchmark-report.md`, a public-safe copy of the supplied benchmark pack. Exact generation/editor prompts and six tasks are copied into this skill. Results are reproduced in SKILL.md, not recomputed. No raw run outputs were attached.
+Source: `docs/benchmark-report.md`, a public-safe copy of the supplied benchmark pack. Exact generation/editor prompts and six tasks are copied into this skill. Results are reproduced in SKILL.md, not recomputed. No raw run outputs were attached. The published aggregates cannot be regenerated from repository contents: raw outputs, full `ref.py`, the executable original scorer and call ledger are absent. A scorer excerpt is not a reproducibility pack. No missing output or exclusion reason has been invented.
+
+Sample accounting: 36 planned, 35 calls reported complete, 32 samples included (B 11, A 11, AR 10). Four planned samples were excluded: one B, one A and two AR. The report mentions an empty AR answer and an incomplete AR call, but exact sample identities and the relationship to the unfinished call are unrecoverable. B/A exclusion identities and reasons are unrecoverable. See `docs/benchmark-report.md`.
 
 Recovered scorer: word regex, per-task constraints. `check.py` is an adaptation, not an identical reproduction. It removes `exec(ref.py)` and dependence on raw response wrappers; rejects fenced/duplicate-key/non-finite JSON; checks types, keys, scene indices, positive integer durations, metadata sentence count and hashtag form; adds preamble detection and structured exact violations. T5 fixes the original decimal-regex pitfall that could treat the trailing `5` in `2,5` as a new number. Therefore new scores must not be directly substituted into the old aggregate percentages.
 

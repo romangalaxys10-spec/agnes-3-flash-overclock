@@ -22,3 +22,25 @@ If you install an optional dependency, its license applies to your environment, 
 ## Original but inspired
 
 `FileMemory` and `FileLessons` are small original stdlib stores written for this repo. They do not copy mem0 or Self-Learning-Agents code.
+
+
+## Optional dependency version policy
+
+No minimum compatible release has been validated for these optional adapters.
+Do not read unversioned `pip install` examples as a tested compatibility promise.
+Before adoption, test the upstream API used by the adapter in a disposable
+Python 3.10+ environment, then pin the working release and lock transitive
+versions (`pip freeze` or your package manager's lock file).
+
+- mem0ai: needs `Memory.add` and `Memory.search(query=..., filters=..., top_k=...)`;
+  pin `mem0ai==<validated-version>` after checking that signature.
+- headroom-ai: needs `headroom.compress(messages, model=..., model_limit=...)`
+  returning an object with `.messages`; pin `headroom-ai[all]==<validated-version>`.
+- Self-Learning-Agents: needs `SelfLearner`, `save_feedback`,
+  `set_feedback_formatter` and `apply_feedback`; pin an exact upstream commit
+  rather than a moving Git branch. No compatible commit is certified here.
+
+The placeholders above are pin guidance, not installable requirements or
+invented minimum versions. Update this file with exact versions only after
+adapter integration tests against those dependencies pass. Offline tests cover
+missing-dependency errors, not optional upstream integration compatibility.
