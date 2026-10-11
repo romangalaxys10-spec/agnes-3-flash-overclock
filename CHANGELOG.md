@@ -16,6 +16,10 @@ names describe evidence tiers, not software release versions. This is not v1.0.
 - Add the ZCode project config, host setup checks, sample inputs, regression
   tests, honest benchmark accounting and optional-dependency caveats.
 
+- Add opt-in Anti Helizzinator proof-of-delivery prompt and structural gate:
+  work manifest/hashes/command logs, code diff/test records, visual inspection
+  assertions, CLI/MCP examples and rejection regressions. Presence is not truth.
+
 Release policy: keep plugin/runtime version fields equal. Changes stay
 experimental and unreleased until explicitly approved; no benchmark gain or
 host certification is implied by a patch release.

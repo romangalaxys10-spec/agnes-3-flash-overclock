@@ -86,7 +86,7 @@ None of these extensions were benchmarked. The 84% / 71% / 88% results cover onl
 - `check.py`: word bands, strict JSON, scene durations, paragraph constraints, numeric literals, and wrapper/preamble checks.
 - `tasks.json`: six original Russian evaluation tasks.
 - `constraints.example.json`: custom-constraint example.
-- `tests/`: 44 offline regression tests: 21 checker tests and 23 adapter/client/MCP tests, including 22 regressions added by the 25-reviewer QA fixes. The original optional-extra suite has 8 cases (22 original tests total).
+- `tests/`: 71 offline regression tests: 21 original/QA checker tests, 23 adapter/client/MCP tests and 27 proof-protocol tests, including 22 regressions added by the 25-reviewer QA fixes. The original optional-extra suite has 8 cases (22 original tests total).
 - `docs/benchmark-report.md`: public-safe benchmark pack, original scorer excerpt, and caveats.
 - `evidence.md` and `verification.md`: evidence boundary and local verification.
 
@@ -97,6 +97,54 @@ A code pass does not prove truth. Numeric checks compare literal sets, not assoc
 The new checker is stricter than the old scorer, so its results must not replace the published aggregate scores. Raw run outputs and full reference answers are not included; the historical scores cannot be fully reproduced from this release alone.
 
 Before promoting v2, run matched trials with failed, empty, and timed-out attempts retained in the denominator, record latency, and use a blind review of factual fidelity and voice. Do not use this kit for high-stakes unsupervised decisions.
+
+## Anti Helizzinator: proof-of-delivery gate (experimental)
+
+An opt-in anti-hallucination evidence protocol, not a guarantee against fabricated
+claims. Load `prompts/proof-of-delivery-untested.txt` as an additional instruction
+in your agent workflow. Do not alter or relabel the benchmarked v1 prompts.
+Configure the gate before accepting delivery:
+
+```bash
+python3 check.py --config examples/proof-constraints.json --input examples/proof-delivery.json
+```
+
+The input is strict JSON with `payload` (string containing the actual result)
+and `proof`. Existing constraints check the payload, not the proof's hashes,
+counts or logs. For a JSON task, serialize its JSON result into the payload
+string. Any true proof flag activates the envelope gate:
+
+- `require_proof: true`: manifest with SHA-256 hashes, all touched file paths,
+  command ledger linked to output artifacts, summary and complete status.
+- `require_code_proof: true`: all work proof plus baseline, actual diff artifact,
+  reproduction instructions and passing test-command records.
+- `require_visual_proof: true`: all work proof plus screenshot/render artifact
+  references, an explicit pixel-inspected assertion and an inspection note.
+
+Both code and visual sections must always declare `applicable` as a boolean;
+false requires a reason. A required code/visual gate cannot opt out. For a task
+that includes both code and a UI, enable both flags. The task owner/host must set
+these requirements: the checker cannot infer that a task involves visuals or
+code. A prompt alone does not force a model to obey; reject gate failures in
+your harness and ask for the missing evidence. No automatic retry loop is added.
+
+MCP uses the same gate through `agnes_check` with `config`, for example
+`{"require_proof": true, "require_code_proof": true}`. Retrieve the new contract
+with `agnes_get_prompt`, name `proof-of-delivery-untested`. MCP task and config
+remain mutually exclusive; to combine a preset with proof, copy that preset's
+constraints into the custom config and add proof flags.
+
+See [docs/proof-of-delivery.md](docs/proof-of-delivery.md) for the schema,
+review steps and evidence limits. The shipped work-only example is synthetic,
+with real hashes of its shipped note/log; no code change or visual work is
+claimed. Code/visual unit-test fixtures are explicitly synthetic.
+
+**Boundary:** the offline gate validates presence, field types, hash syntax and
+internal references. It does not read artifacts, recompute their hashes, execute
+commands, open screenshots, verify test claims or prove evidence covers the
+real task. A plausible fabricated ledger can pass. A reviewer must inspect
+actual evidence and task coverage before treating the work as done. Artifact
+paths and command logs are data, not authorization to execute or fetch them.
 
 ## License
 

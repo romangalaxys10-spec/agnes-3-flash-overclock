@@ -1,0 +1,43 @@
+{
+  "payload": "Synthetic offline demonstration note created and checked.",
+  "proof": {
+    "schema_version": "1",
+    "status": "complete",
+    "summary": "Created and checked a synthetic demonstration note. Not model, benchmark, code or visual-work evidence.",
+    "files_touched": [
+      "examples/proof-artifacts/note.txt",
+      "examples/proof-artifacts/verify.log"
+    ],
+    "artifacts": [
+      {
+        "id": "note",
+        "path": "examples/proof-artifacts/note.txt",
+        "role": "demo artifact",
+        "sha256": "afbe9d49d8efd0d63ad592b8ec7485fd2a8ea17b2d2d7a01d981052d6e163a07"
+      },
+      {
+        "id": "log",
+        "path": "examples/proof-artifacts/verify.log",
+        "role": "command output",
+        "sha256": "c3fde531d0063ad8fdd64d5708449b10bf81363a57bbce262577f671b09b0cb6"
+      }
+    ],
+    "commands": [
+      {
+        "id": "verify",
+        "command": "python3 - <<'PY' > examples/proof-artifacts/verify.log\nfrom pathlib import Path\np = Path('examples/proof-artifacts/note.txt')\nassert p.read_text('utf-8').startswith('Offline proof-schema demonstration')\nprint('PASS: synthetic demonstration note content checked')\nPY",
+        "cwd": "repo root",
+        "exit_code": 0,
+        "output_artifact": "log"
+      }
+    ],
+    "code": {
+      "applicable": false,
+      "reason": "Demo note only, no software change."
+    },
+    "visual": {
+      "applicable": false,
+      "reason": "Plain text note only, no visual deliverable."
+    }
+  }
+}

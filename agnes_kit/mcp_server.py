@@ -29,11 +29,11 @@ def _obj(props, req):
 
 S = {"type": "string"}
 TOOLS = [
-    {"name": "agnes_check", "description": "Run the offline Agnes checker on a model output. Provide either task (preset id) or config (JSON object).",
+    {"name": "agnes_check", "description": "Run the offline Agnes checker on a model output. Provide either task (preset id) or config (JSON object). Custom config supports require_proof, require_code_proof and require_visual_proof delivery-envelope gates.",
      "inputSchema": _obj({"text": S, "task": {"type": "string", "enum": sorted(_check.PRESETS)}, "config": {"type": "object"},
                           "source": S, "extract_final": {"type": "boolean"}}, ["text"])},
     {"name": "agnes_list_tasks", "description": "List the six benchmark tasks (id, task text, check spec).", "inputSchema": _obj({}, [])},
-    {"name": "agnes_get_prompt", "description": "Return a prompt template by name (v1 tested, v2 untested).",
+    {"name": "agnes_get_prompt", "description": "Return a prompt template by name (v1 tested, v2/proof-of-delivery untested).",
      "inputSchema": _obj({"name": {"type": "string", "enum": sorted(PROMPTS)}}, ["name"])},
     {"name": "agnes_build_messages", "description": "Build OpenAI-style messages: tested v1 generation prompt + task (+ optional memories/lessons). Does not call a model.",
      "inputSchema": _obj({"task": S, "memories": {"type": "array", "items": S}, "lessons": {"type": "array", "items": S}}, ["task"])},

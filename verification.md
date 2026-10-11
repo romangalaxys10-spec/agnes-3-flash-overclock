@@ -23,3 +23,14 @@ A null JSON payload initially escaped the mode-specific checks because null shar
 - Synthetic quickstart fixtures pass all four advertised checker commands.
 - Plugin manifest and MCP initialize both remain experimental version 0.1.0.
 - No real host, optional upstream dependency or Agnes endpoint was exercised.
+
+
+## Proof protocol verification, 2026-10-11
+
+71 offline tests pass, including 27 proof-gate regressions. Coverage rejects
+missing proof, malformed fields/hashes, dangling/duplicate artifact or command
+references, unmanifested touched files, failed tests, missing code/visual proof,
+opt-out bypasses and missing pixel-inspection assertions. Tests also show that
+a well-formed but false hash passes: the checker does not verify truth. Shipped
+work-only sample hashes were independently recomputed in a unit test. No real
+visual delivery or live Agnes generation was run for this feature.

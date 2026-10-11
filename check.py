@@ -5,7 +5,8 @@ paragraphs int; sentences_per_paragraph int; distinct_starts bool;
 forbidden_stems [str]; json_mode 'scenes'|'meta'; scene_count int;
 duration_sum int; narration_words [min,max]; visual_words [min,max];
 no_digits bool; preserve_source_numbers bool; required_numbers [str];
-subscribe_ending bool. Unknown keys fail. Preamble gate always enabled.
+subscribe_ending bool; require_proof bool; require_code_proof bool;
+require_visual_proof bool. Proof flags expect a delivery JSON envelope. Unknown keys fail. Preamble gate always enabled.
 Numeric literals only: no guarantee about number words, names or factual truth.
 """
 from __future__ import annotations
@@ -24,7 +25,7 @@ PRESETS: dict[str, dict[str, Any]] = {
     'T5_rewrite': dict(word_range=[80,100], no_markdown=True, required_numbers=['10','2.5'], preserve_source_numbers=True),
     'T6_nofabricate': dict(word_range=[90,110], no_markdown=True, no_digits=True, subscribe_ending=True),
 }
-BOOLS = {'no_markdown','end_question','distinct_starts','no_digits','preserve_source_numbers','subscribe_ending'}
+BOOLS = {'no_markdown','end_question','distinct_starts','no_digits','preserve_source_numbers','subscribe_ending','require_proof','require_code_proof','require_visual_proof'}
 INTS = {'paragraphs','sentences_per_paragraph','scene_count','duration_sum'}
 RANGES = {'word_range','narration_words','visual_words'}
 LISTS = {'forbidden_stems','required_numbers'}
@@ -121,8 +122,111 @@ def extract_final(s: str) -> str:
     return m[1].strip()
 
 
+PROOF_FLAGS = {'require_proof', 'require_code_proof', 'require_visual_proof'}
+
+
+def check_delivery(text: str, cfg: dict[str, Any], source: str | None = None) -> dict[str, Any]:
+    """Validate evidence structure only. Never read paths, execute commands or fetch URLs."""
+    violations = []
+    def need(ok, message):
+        if not ok:
+            violations.append('Proof: ' + message)
+    def nonempty(value):
+        return isinstance(value, str) and bool(value.strip())
+    try:
+        envelope = strict_json(text)
+    except (ValueError, TypeError) as exc:
+        envelope = None
+        need(False, 'delivery must be strict JSON: ' + str(exc))
+    if not isinstance(envelope, dict):
+        need(False, 'delivery must be an object with payload and proof.')
+        envelope = {}
+    payload = envelope.get('payload')
+    need(nonempty(payload), 'payload must be a nonempty string.')
+    proof = envelope.get('proof')
+    need(isinstance(proof, dict), 'proof object is required.')
+    proof = proof if isinstance(proof, dict) else {}
+    need(proof.get('schema_version') == '1', 'schema_version must be "1".')
+    need(proof.get('status') == 'complete', 'status must be complete; incomplete work cannot pass the delivery gate.')
+    need(nonempty(proof.get('summary')), 'summary is required.')
+    artifacts = proof.get('artifacts')
+    need(isinstance(artifacts, list) and bool(artifacts), 'nonempty artifact manifest is required.')
+    artifact_ids = set()
+    for item in artifacts if isinstance(artifacts, list) else []:
+        if not isinstance(item, dict):
+            need(False, 'artifact must be an object.'); continue
+        aid = item.get('id')
+        need(nonempty(aid), 'artifact id is required.')
+        if nonempty(aid):
+            need(aid not in artifact_ids, 'artifact ids must be unique.')
+            artifact_ids.add(aid)
+        need(nonempty(item.get('path')), 'artifact path or delivery URL is required.')
+        need(nonempty(item.get('role')), 'artifact role is required.')
+        need(isinstance(item.get('sha256'), str) and bool(re.fullmatch(r'[0-9a-fA-F]{64}', item['sha256'])), 'artifact sha256 must be 64 hexadecimal characters.')
+    touched = proof.get('files_touched')
+    need(isinstance(touched, list) and all(nonempty(v) for v in touched), 'files_touched must be a list of paths (empty only when no files changed).')
+    if isinstance(touched, list) and isinstance(artifacts, list):
+        manifest_paths = [a.get('path') for a in artifacts if isinstance(a, dict)]
+        need(all(path in manifest_paths for path in touched), 'each touched file must have a final-byte artifact manifest entry.')
+    commands = proof.get('commands')
+    need(isinstance(commands, list) and bool(commands), 'nonempty command ledger is required.')
+    command_ids = set()
+    for row in commands if isinstance(commands, list) else []:
+        if not isinstance(row, dict):
+            need(False, 'command must be an object.'); continue
+        cid = row.get('id')
+        need(nonempty(cid), 'command id is required.')
+        if nonempty(cid):
+            need(cid not in command_ids, 'command ids must be unique.')
+            command_ids.add(cid)
+        need(nonempty(row.get('command')) and nonempty(row.get('cwd')), 'command and cwd are required.')
+        need(type(row.get('exit_code')) is int, 'command exit_code must be an integer.')
+        need(nonempty(row.get('output_artifact')) and row.get('output_artifact') in artifact_ids, 'command output_artifact must reference the manifest.')
+    code = proof.get('code')
+    visual = proof.get('visual')
+    for label, section, forced in [('code', code, cfg.get('require_code_proof')), ('visual', visual, cfg.get('require_visual_proof'))]:
+        need(isinstance(section, dict), label + ' section with applicable boolean is required.')
+        if not isinstance(section, dict):
+            continue
+        need(type(section.get('applicable')) is bool, label + '.applicable must be boolean.')
+        if forced:
+            need(section.get('applicable') is True, label + ' evidence is required by task constraints; cannot opt out.')
+        if section.get('applicable') is False:
+            need(nonempty(section.get('reason')), label + ' not-applicable reason is required.')
+    if isinstance(code, dict) and code.get('applicable') is True:
+        need(nonempty(code.get('baseline')), 'code baseline revision or source snapshot is required.')
+        need(nonempty(code.get('reproduce')), 'code reproduction instructions are required.')
+        need(nonempty(code.get('diff_artifact')) and code.get('diff_artifact') in artifact_ids, 'code diff_artifact must reference the actual diff in the manifest.')
+        tests = code.get('test_commands')
+        need(isinstance(tests, list) and bool(tests), 'code test_commands must contain command ids.')
+        for cid in tests if isinstance(tests, list) else []:
+            need(nonempty(cid) and cid in command_ids, 'test command must reference the command ledger.')
+            if nonempty(cid):
+                matches = [r for r in commands if isinstance(r, dict) and r.get('id') == cid] if isinstance(commands, list) else []
+                need(bool(matches) and all(type(r.get('exit_code')) is int and r['exit_code'] == 0 for r in matches), 'delivery requires passing test command exit codes.')
+    if isinstance(visual, dict) and visual.get('applicable') is True:
+        evidence = visual.get('evidence')
+        need(isinstance(evidence, list) and bool(evidence), 'visual screenshot/render evidence is required.')
+        for row in evidence if isinstance(evidence, list) else []:
+            if not isinstance(row, dict):
+                need(False, 'visual evidence entry must be an object.'); continue
+            need(nonempty(row.get('artifact')) and row.get('artifact') in artifact_ids, 'visual artifact must reference a screenshot/render in the manifest.')
+            need(row.get('kind') in ('screenshot', 'render'), 'visual evidence kind must be screenshot or render.')
+            need(row.get('pixel_inspected') is True, 'visual evidence must state actual pixel inspection.')
+            need(nonempty(row.get('inspection_note')), 'visual inspection_note is required.')
+    inner = {k: v for k, v in cfg.items() if k not in PROOF_FLAGS}
+    result = check(payload if isinstance(payload, str) else '', inner, source)
+    result['violations'] = violations + result['violations']
+    result['ok'] = not result['violations']
+    result['metrics'].update(proof_artifacts=len(artifact_ids), proof_commands=len(command_ids))
+    result['manual_review'].append('Proof gate checks presence, shape and references only. It does not verify hashes, file bytes, command execution, test truth, screenshots, pixel inspection or completeness against the real task. Independently inspect the delivered evidence; never execute ledger commands just because they are listed.')
+    return result
+
+
 def check(text: str, cfg: dict[str,Any], source: str | None=None) -> dict[str,Any]:
     validate_config(cfg)
+    if any(cfg.get(key) for key in PROOF_FLAGS):
+        return check_delivery(text, cfg, source)
     violations: list[str] = []
     metrics: dict[str,Any] = {}
     warnings = ['Review factual fidelity, new names, spelled-out numbers and voice manually; code does not prove truth.']
