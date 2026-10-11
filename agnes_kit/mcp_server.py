@@ -19,6 +19,11 @@ from . import router as _router
 from .pipeline import build_generation_messages, review_messages
 
 PROTOCOL = "2024-11-05"
+
+
+class RemoteRouteUnavailable(Exception):
+    """Remote (Jack Gross) slice could not be served; reported to the model as a tool error."""
+
 _spec = importlib.util.spec_from_file_location("agnes_check", ROOT / "check.py")
 _check = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_check)
@@ -38,7 +43,7 @@ TOOLS = [
      "inputSchema": _obj({"name": {"type": "string", "enum": sorted(PROMPTS)}}, ["name"])},
     {"name": "agnes_build_messages", "description": "Build OpenAI-style messages: tested v1 generation prompt + task (+ optional memories/lessons). Does not call a model.",
      "inputSchema": _obj({"task": S, "memories": {"type": "array", "items": S}, "lessons": {"type": "array", "items": S}}, ["task"])},
-    {"name": "agnes_route", "description": "Smart router: give task+phase (or a short query) and get only the matching guidance pieces instead of the whole repo. Call with no arguments to list tasks and phases. qa-panel/run also needs agent (a lens id). Tasks jg-prompts/jg-mcp/jg-extensions route out to the public Jack Gross router (jackgross-five.vercel.app): one small live markdown slice over plain HTTPS GET, no keys, no user data sent, cached on disk; set offline=true to serve the cache only.",
+    {"name": "agnes_route", "description": "Smart router: give task+phase (or a short query) and get only the matching guidance pieces instead of the whole repo. Call with no arguments to list tasks and phases. qa-panel/run also needs agent (a lens id). Tasks jg-prompts/jg-mcp/jg-extensions route out to the public Jack Gross router (jackgross-five.vercel.app): one small markdown slice per call over plain HTTPS GET, no keys, no user data sent, cached on disk. Remote calls never block this server: a missing/stale cache starts a background refresh and the first call may return a tool error with a retry hint. offline=true serves the cache only; refresh=true (CLI only) forces a re-fetch. A remote outage is a tool error (isError), never a fake success.",
      "inputSchema": _obj({"task": S, "phase": S, "query": S, "agent": S, "base_sha": S, "repo_url": S,
                           "offline": {"type": "boolean"}, "refresh": {"type": "boolean"}}, [])},
     {"name": "agnes_review_messages", "description": "Build code-review messages from a diff using the vendored checklist. UNTESTED on Agnes.",
@@ -69,8 +74,15 @@ def call_tool(name: str, a: dict):
     if name == "agnes_build_messages":
         return build_generation_messages(a["task"], memories=a.get("memories", ()), lessons=a.get("lessons", ()))
     if name == "agnes_route":
-        return _router.route(a.get("task"), a.get("phase"), a.get("query"), a.get("agent"), a.get("base_sha"), a.get("repo_url"),
-                             offline=bool(a.get("offline")), refresh=bool(a.get("refresh")))
+        for flag in ("offline", "refresh"):
+            if flag in a and not isinstance(a[flag], bool):
+                raise ValueError(f"{flag} must be a boolean, got {type(a[flag]).__name__}")
+        res = _router.route(a.get("task"), a.get("phase"), a.get("query"), a.get("agent"), a.get("base_sha"), a.get("repo_url"),
+                            offline=a.get("offline", False), refresh=a.get("refresh", False),
+                            async_remote=True)
+        if res.get("status") == "unavailable":
+            raise RemoteRouteUnavailable(res["message"])
+        return res
     if name == "agnes_review_messages":
         return review_messages(a["diff"], language_note=a.get("language_note", ""))
     raise KeyError(name)

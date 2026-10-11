@@ -6,7 +6,7 @@ router (https://jackgross-five.vercel.app/router.md); --offline serves the local
 --refresh re-fetches. Plain GETs, no keys, no user data sent.
 """
 import argparse, json, sys
-from agnes_kit import router as r
+from agnes_kit import jg_router, router as r
 
 
 def main(argv=None):
@@ -19,7 +19,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     try:
         if a.list:
-            print(json.dumps(r.list_routes(), indent=2)); return 0
+            print(json.dumps({"local": r.list_routes(),
+                              "remote_jack_gross": jg_router.index_summary()}, indent=2)); return 0
         res = r.route(a.task, a.phase, a.query, a.agent, a.base_sha, a.repo_url,
                       offline=a.offline, refresh=a.refresh)
     except (OSError, ValueError, KeyError) as e:
@@ -30,7 +31,8 @@ def main(argv=None):
         print(f"# route {res['route']} ({res['bytes']} bytes). Other phases: {', '.join(res['other_phases_of_task'])}\n")
         for it in res["items"]:
             print(f"--- {it['source']}\n{it['content']}")
-    return 0 if res["status"] == "ok" else 1
+    # 0 = content returned; 1 = ambiguous/unknown/needs input; 2 = remote slice unavailable
+    return 0 if res["status"] == "ok" else (2 if res["status"] == "unavailable" else 1)
 
 
 if __name__ == "__main__":

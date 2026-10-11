@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from agnes_kit import jg_router, router as r
 from agnes_kit import qa_panel
-from agnes_kit.mcp_server import call_tool
+from agnes_kit.mcp_server import RemoteRouteUnavailable, call_tool, handle
 
 AGENT = qa_panel.load_perspectives()[0]["id"]
 STUB_TEXT = "# stub slice\nstubbed remote content\n"
@@ -129,11 +129,79 @@ class RouterTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 jg_router.fetch("extensions", "latest", fetcher=lambda u, t: big)
 
-    def test_mcp_remote_offline_arg(self):
+    def test_mcp_remote_outage_is_tool_error(self):
         with tempfile.TemporaryDirectory() as td:
             os.environ[jg_router.ENV_CACHE_DIR] = td
-            out = call_tool("agnes_route", {"task": "jg-prompts", "phase": "verify", "offline": True})
-            self.assertEqual(out["status"], "unavailable")
+            with self.assertRaises(RemoteRouteUnavailable):
+                call_tool("agnes_route", {"task": "jg-prompts", "phase": "verify", "offline": True})
+            resp = handle({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                           "params": {"name": "agnes_route",
+                                      "arguments": {"task": "jg-prompts", "phase": "verify", "offline": True}}})
+            self.assertTrue(resp["result"]["isError"])
+            self.assertIn("https://", resp["result"]["content"][0]["text"])
+            resp_ok = handle({"jsonrpc": "2.0", "id": 2, "method": "tools/call",
+                              "params": {"name": "agnes_route", "arguments": {"task": "proof", "phase": "deliver"}}})
+            self.assertFalse(resp_ok["result"]["isError"])
+
+    def test_mcp_bool_args_validated(self):
+        with self.assertRaises(ValueError):
+            call_tool("agnes_route", {"task": "proof", "phase": "deliver", "offline": "false"})
+        with self.assertRaises(ValueError):
+            call_tool("agnes_route", {"task": "proof", "phase": "deliver", "refresh": 1})
+
+    def test_mcp_remote_never_blocks_loop(self):
+        import time as _time
+        def slow_get(url, timeout):
+            _time.sleep(2)
+            return "# slow slice\nbody\n"
+        orig = jg_router._network_get
+        jg_router._network_get = slow_get
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                os.environ[jg_router.ENV_CACHE_DIR] = td
+                t0 = _time.monotonic()
+                with self.assertRaises(RemoteRouteUnavailable) as cm:
+                    call_tool("agnes_route", {"task": "jg-extensions", "phase": "lookup"})
+                self.assertLess(_time.monotonic() - t0, 1.0)  # loop stays responsive
+                self.assertIn("background fetch", str(cm.exception))
+                cache_file = Path(td) / "extensions--lookup.md"
+                for _ in range(50):
+                    if cache_file.exists():
+                        break
+                    _time.sleep(0.1)
+                self.assertTrue(cache_file.exists())
+                res = call_tool("agnes_route", {"task": "jg-extensions", "phase": "lookup"})
+                self.assertEqual(res["status"], "ok")
+                self.assertIn("[cache]", res["items"][0]["source"])
+        finally:
+            jg_router._network_get = orig
+
+    def test_remote_content_wrapped_untrusted(self):
+        with tempfile.TemporaryDirectory() as td:
+            os.environ[jg_router.ENV_CACHE_DIR] = td
+            res = r.route("jg-prompts", "fill", fetcher=stub_fetch)
+            body = res["items"][0]["content"]
+            self.assertIn("[UNTRUSTED EXTERNAL TEXT", body)
+            self.assertIn("[END UNTRUSTED EXTERNAL TEXT]", body)
+            self.assertIn("stubbed remote content", body)
+            self.assertLessEqual(res["bytes"], r.MAX_ITEM_BYTES)
+
+    def test_legacy_query_prompts_stays_local(self):
+        # single generic words must not be hijacked by remote routes
+        self.assertEqual(r.route(query="prompts")["route"], "qa.render")
+        with tempfile.TemporaryDirectory() as td:
+            os.environ[jg_router.ENV_CACHE_DIR] = td
+            res = r.route(query="find a prompt for support writing", fetcher=stub_fetch)
+            self.assertEqual(res["route"], "jg-prompts.select")
+
+    def test_cli_unavailable_exit_code_2(self):
+        with tempfile.TemporaryDirectory() as td:
+            env = dict(os.environ, **{jg_router.ENV_CACHE_DIR: td})
+            p = subprocess.run([sys.executable, str(ROOT / "route.py"), "--task", "jg-mcp",
+                                "--phase", "secure", "--offline"], capture_output=True, text=True,
+                               cwd=ROOT, env=env)
+            self.assertEqual(p.returncode, 2, p.stderr)
+            self.assertIn("unavailable", p.stdout)
 
     @unittest.skipUnless(os.environ.get("AGNES_LIVE_TEST") == "1", "live network smoke test opt-in")
     def test_live_site_smoke(self):

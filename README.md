@@ -33,7 +33,7 @@ maintenance heading. No v1.0 release or new model-quality result is claimed.
   envelope, prompt, example and CLI/MCP integration. Presence and shape are checked,
   not truth. See the protocol section below before using it as a completion gate.
 
-92 offline tests pass in total (71 for the QA fixes and proof protocol, 21 for the QA panel, unslop filters and router).
+113 tests pass (112 offline + 1 opt-in live-network smoke test, skipped unless `AGNES_LIVE_TEST=1`).
 Cold-clone quickstart and stdio MCP smoke checks pass; real IDE hosts, optional
 upstream packages and live Agnes generation remain untested. Historical benchmark
 aggregates are unchanged, and repository history has not been rewritten.
@@ -118,7 +118,7 @@ None of these extensions were benchmarked. The 84% / 71% / 88% results cover onl
 - `check.py`: word bands, strict JSON, scene durations, paragraph constraints, numeric literals, and wrapper/preamble checks.
 - `tasks.json`: six original Russian evaluation tasks.
 - `constraints.example.json`: custom-constraint example.
-- `tests/`: 71 offline regression tests: 21 original/QA checker tests, 23 adapter/client/MCP tests and 27 proof-protocol tests, including 22 regressions added by the 25-reviewer QA fixes. The original optional-extra suite has 8 cases (22 original tests total).
+- `tests/`: offline regression tests covering the checker, adapters/clients/MCP, the proof protocol, the QA panel, the unslop filters and the router (including the remote Jack Gross routes, tested with a stubbed network and a local HTTP harness; the suite never touches the real site).
 - `docs/benchmark-report.md`: public-safe benchmark pack, original scorer excerpt, and caveats.
 - `evidence.md` and `verification.md`: evidence boundary and local verification.
 
@@ -188,7 +188,7 @@ Anti-generic-AI-design rules for UI work as a prompt, an offline static scanner 
 
 ## Smart routing (experimental)
 
-`python3 route.py --task <task> --phase <phase>` (or the `agnes_route` MCP tool) returns only the guidance for one task phase across the QA panel, unslop filters, proof gate and script workflow, so an agent does not read the whole repo. Keyword matching only; no model involved. See [docs/routing.md](docs/routing.md).
+`python3 route.py --task <task> --phase <phase>` (or the `agnes_route` MCP tool) returns only the guidance for one task phase across the QA panel, unslop filters, proof gate and script workflow, so an agent does not read the whole repo. The remote `jg-prompts` / `jg-mcp` / `jg-extensions` tasks route out to the public Jack Gross router (jackgross-five.vercel.app): one small live markdown slice per call over a plain GET - fixed origin, no redirects, absolute deadline, no keys, no user data sent - with an on-disk cache, a non-blocking MCP mode, an offline fallback, and every fetched slice wrapped in an explicit untrusted-content marker. Keyword matching only; no model involved. See [docs/routing.md](docs/routing.md).
 
 ## License
 
