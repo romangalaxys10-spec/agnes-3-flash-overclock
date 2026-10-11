@@ -10,6 +10,47 @@ STATUS: EXPERIMENTAL. Nothing here is installed in any production pipeline. v1 p
 
 Caveats: directional only. n=2 per cell, different denominators (empty/incomplete outputs excluded), one self-written reference. No blind quality judge. Do not claim parity with any Opus model; Opus 5 was never measured.
 
+
+## Reproducibility and sample accounting
+
+The published aggregate scores cannot be regenerated from repository contents.
+Raw outputs (`raw.json`), full reference answers (`ref.py`), the executable original
+scorer, and the call ledger are absent. The historical scorer excerpt below is
+not a standalone scorer. Do not manufacture missing evidence or recalculate the
+published scores using the newer checker.
+
+36 samples were planned (6 tasks x 2 samples x 3 conditions). The report says
+35/36 calls completed, but only 32 samples appear in the score denominators:
+B = 11, A = 11, AR = 10. Thus the aggregates exclude 4 planned samples:
+1 B, 1 A and 2 AR. The evidence ledger mentions an empty AR answer and an
+incomplete AR call, but their task/sample IDs and their relation to the one
+unfinished call cannot be recovered. The identities and precise reasons for
+the B and A exclusions are also unrecoverable. These statements reconcile the
+counts only; they do not establish a complete per-call exclusion ledger.
+
+## English task and prompt gloss (not benchmark inputs)
+
+- T1: Russian voiceover about why time seems faster with age, 150-170 words,
+  strong opening hook, no lists/Markdown, ending with a viewer question.
+- T2: Exactly six JSON scenes with Russian narration (20-30 words), English
+  visual descriptions (15-30 words), integer durations totaling 60 seconds.
+- T3: Five paragraphs of two sentences comparing a child and an older person's
+  experience of an hour, distinct opening words, no forms of the Russian words
+  for "time" or "fast", no Markdown/headings.
+- T4: JSON metadata for "The Night That Never Was": title <=60 characters,
+  caption 1-2 sentences <=150 characters, five hashtags including two Russian.
+- T5: Conversational TikTok rewrite of the supplied passage, 80-100 words,
+  preserve all facts and numbers (10 percent and 2.5 percent), add none.
+- T6: Voiceover on perceived event duration, 90-110 words, no unsupported
+  concrete numbers, scientist names or study titles, finish with a subscribe invitation.
+- Generation prompt: Russian short-video writer, rhythmic conversational phrases
+  addressed to "you", concrete images, no cliches or invented facts. List task
+  constraints and a brief plan in `<check>`, deliver only the result in `<final>`,
+  nothing after it. Includes hook and JSON examples, then the task label.
+- Editor prompt: check every task constraint, explicitly count quantities and
+  fix violations. Summarize violations in `<check>` and return only the final
+  result in `<final>`.
+
 ## Where Agnes loses (measured)
 - Hard count constraints (word counts, paragraph/sentence counts). T1 hit 150-170 words in only 2/6 runs.
 - Adds numbers the source did not have (T5: 4/6 runs).
@@ -32,7 +73,7 @@ Simple style prompt + CODE doing the counting (words, JSON validity, digits, pre
 ```
 
 ## pre.txt (adapted prompt v1 - generation pass)
-```
+````text
 Ты — сценарист коротких вертикальных видео на русском языке («Время» — философско-научная серия для TikTok/YouTube Shorts). Правила стиля: короткие ритмичные фразы; живой разговорный голос, на «ты»; конкретные образы вместо абстракций; никаких клише («в современном мире», «давайте разберёмся»); ни одного выдуманного факта, цифры или цитаты; строго соблюдай ВСЕ числовые и структурные ограничения задачи (объём, количество, формат). Если формат — JSON, выдай только JSON.
 
 Порядок работы: сначала в блоке <check> кратко перечисли ограничения задачи списком и план (3-6 строк). Затем в блоке <final> выдай готовый результат — только то, что должно попасть в видео или файл, без пояснений. После <final> ничего не пиши.
@@ -41,7 +82,7 @@ Simple style prompt + CODE doing the counting (words, JSON validity, digits, pre
 Пример структуры JSON-ответа: сразу открывающая скобка, без ```.
 
 ЗАДАЧА:
-```
+````
 
 ## rev.txt (editor revise pass - the piece that actually helped)
 ```
