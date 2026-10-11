@@ -24,6 +24,11 @@ class PanelTests(unittest.TestCase):
         for w in range(1, 6):
             self.assertEqual(sum(1 for p in P if p["wave"] == w), 5)
 
+    def test_optional_lens(self):
+        full = q.load_perspectives(with_optional=True)
+        self.assertEqual(len(full), 26)
+        self.assertEqual(full[-1]["id"], "ui-slop")
+
     def test_render_briefs(self):
         b = q.render_briefs(P, SHA, "https://x/y")
         self.assertEqual(len(b), 25)

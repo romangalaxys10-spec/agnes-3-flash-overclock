@@ -14,10 +14,12 @@ REQUIRED = ("title", "severity", "file", "evidence")
 SHA_RE = re.compile(r"^[0-9a-f]{7,40}$")
 
 
-def load_perspectives(path=None):
+def load_perspectives(path=None, with_optional=False):
     p = Path(path) if path else ROOT / "qa-panel" / "perspectives.json"
     data = json.loads(p.read_text(encoding="utf-8"))
-    items = data["perspectives"]
+    items = list(data["perspectives"])
+    if with_optional:
+        items += json.loads((ROOT / "qa-panel" / "optional-lenses.json").read_text(encoding="utf-8"))["perspectives"]
     ids = [x["id"] for x in items]
     if len(set(ids)) != len(ids):
         raise ValueError("duplicate perspective ids")

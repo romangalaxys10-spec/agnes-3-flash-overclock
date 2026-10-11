@@ -59,7 +59,7 @@ def _item(it, args):
         return it["path"], _safe(it["path"]).read_text(encoding="utf-8")
     if t == "section":
         return f"{it['path']}#{it['heading']}", extract_section(_safe(it["path"]).read_text(encoding="utf-8"), it["heading"])
-    persp = qa_panel.load_perspectives()
+    persp = qa_panel.load_perspectives(with_optional=True)
     if t == "wave-list":
         lines = [f"{p['number']:>2}. wave {p['wave']} {p['id']}: {p['name']}" for p in persp]
         return "qa-panel/perspectives.json (ids only)", "\n".join(lines) + "\n"

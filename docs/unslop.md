@@ -34,7 +34,7 @@ Detected (regex over text; false positives and misses are expected):
 | high | Inter/Roboto/Arial/system-ui first in font-family; purple or indigo gradient; border-radius 24px+ (not pill); ghost card (1px border + blur 16px+); bounce or overshooting easing; image scaled on hover; hex-vs-hex text contrast under 4.5:1 |
 | medium | backdrop-filter blur; z-index 999+; letter-spacing below -0.04em; clamp() display size above 6rem; tiny tracked uppercase label; animation with no reduced-motion alternative in the file; Tailwind equivalents of several of the above |
 
-Not detectable by text, so manual (the QA panel's visual-render lens applies this list):
+Not detectable by text, so manual (the optional `ui-slop` QA lens applies this list):
 - body background in the default warm cream/sand "premium" move, or near-black plus one acid accent as an unconsidered default theme
 - identical card grids, nested cards, numbered 01/02/03 markers with no real sequence, an eyebrow above every section
 - broadsheet hairlines and zero radius used as decoration
@@ -46,7 +46,7 @@ Contrast uses only same-rule hex `color` and `background`; anything else is unch
 
 ## With the QA panel and proof gate
 
-The `visual-render` lens in `qa-panel/perspectives.json` runs `unslop_check.py` on any UI code and applies the manual list above, reporting results as normal findings. For delivery, a UI task can attach the scanner output and screenshots as artifacts in an Anti Helizzinator proof envelope; the visual proof gate checks that inspection is asserted, not that it is true.
+The optional `ui-slop` lens in `qa-panel/optional-lenses.json` (enable with `qa_panel.py render --with-optional`; it is a 26th reviewer, not part of the original 25) runs `unslop_check.py` on any UI code and applies the manual list above, reporting results as normal findings. For delivery, a UI task can attach the scanner output and screenshots as artifacts in an Anti Helizzinator proof envelope; the visual proof gate checks that inspection is asserted, not that it is true.
 
 ## Not included
 

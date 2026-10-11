@@ -1,0 +1,14 @@
+{
+  "schema_version": "1",
+  "note": "Optional extension lenses ADDED after the original run; not part of the recovered 25. Enabled with --with-optional.",
+  "perspectives": [
+    {
+      "id": "ui-slop",
+      "number": 26,
+      "wave": 6,
+      "wave_name": "Optional extension",
+      "name": "UI anti-slop reviewer",
+      "focus": "For any UI code or rendered output: run `python3 unslop_check.py <src>` and apply the manual review list in docs/unslop.md. Report scanner hits you confirm and manual tells it cannot see. Mark N/A if there is no UI."
+    }
+  ]
+}

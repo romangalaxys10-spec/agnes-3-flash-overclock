@@ -10,11 +10,11 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("render", help="write one brief per agent")
     r.add_argument("--base-sha", required=True); r.add_argument("--repo-url", default="<repo-url>")
-    r.add_argument("--out", required=True); r.add_argument("--perspectives")
+    r.add_argument("--out", required=True); r.add_argument("--perspectives"); r.add_argument("--with-optional", action="store_true")
     c = sub.add_parser("consolidate", help="validate reports and merge findings")
     c.add_argument("--reports", required=True, help="directory of per-agent JSON reports")
     c.add_argument("--base-sha", required=True); c.add_argument("--out", required=True)
-    c.add_argument("--perspectives")
+    c.add_argument("--perspectives"); c.add_argument("--with-optional", action="store_true")
     g = sub.add_parser("gate", help="check a consolidated issues file")
     g.add_argument("--issues", required=True); g.add_argument("--allow-partial", action="store_true")
     g.add_argument("--perspectives")
@@ -25,7 +25,7 @@ def main(argv=None):
             doc = json.loads(Path(a.issues).read_text(encoding="utf-8"))
             res = q.gate(doc["issues"], doc["coverage"], not a.allow_partial)
             print(json.dumps(res, indent=2)); return 0 if res["passed"] else 1
-        persp = q.load_perspectives(a.perspectives)
+        persp = q.load_perspectives(a.perspectives, a.with_optional)
         out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
         if a.cmd == "render":
             for k, v in q.render_briefs(persp, a.base_sha, a.repo_url).items():

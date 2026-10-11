@@ -1,206 +1,206 @@
 {
   "schema_version": "1",
-  "note": "Reference lens set. Adapt, rename or replace lenses for your codebase; keep 25 distinct agents if you claim a 25-agent panel.",
+  "note": "Recovered from the orchestrating agent's wave delegations of the 2026-10-10/11 run on this repo (reviewer prompts R1-R25). Ids and lens names are condensed from those prompts; focus text is lightly shortened, not verbatim. Wave names were written afterwards by the repo maintainer's assistant. Lenses marked repo-specific should be replaced for other codebases; keep 25 distinct agents if you claim a 25-agent panel.",
   "perspectives": [
     {
-      "id": "correctness-core",
+      "id": "security",
       "number": 1,
       "wave": 1,
-      "wave_name": "Wave 1 - Correctness and backend",
-      "name": "Core logic correctness",
-      "focus": "Trace main code paths against stated behavior; off-by-one, wrong denominators, unhandled branches."
+      "wave_name": "Wave 1: security, correctness, host install flows",
+      "name": "Security reviewer",
+      "focus": "Secrets handling, prompt-injection surface, supply-chain risks in configs, file-permission assumptions, anything that could leak keys or execute unintended code."
     },
     {
-      "id": "edge-inputs",
+      "id": "correctness",
       "number": 2,
       "wave": 1,
-      "wave_name": "Wave 1 - Correctness and backend",
-      "name": "Edge-case inputs",
-      "focus": "Empty, huge, malformed, non-ASCII, deeply nested and boundary inputs; exit codes."
+      "wave_name": "Wave 1: security, correctness, host install flows",
+      "name": "Correctness reviewer",
+      "focus": "Logic errors in scripts and configs, broken paths, wrong syntax, edge cases, README claims the code does not actually do."
     },
     {
-      "id": "api-clients",
+      "id": "install-zcode-trae",
       "number": 3,
       "wave": 1,
-      "wave_name": "Wave 1 - Correctness and backend",
-      "name": "API and network clients",
-      "focus": "Timeouts, retries, redirects, TLS, key handling, error propagation."
+      "wave_name": "Wave 1: security, correctness, host install flows",
+      "name": "Install-flow reviewer (ZCode, Trae)",
+      "focus": "Follow the repo's own install docs for these two hosts exactly as a new user would; report every step that fails, is ambiguous or is missing. Repo-specific: replace the hosts with yours."
     },
     {
-      "id": "storage-state",
+      "id": "install-antigravity-agy",
       "number": 4,
       "wave": 1,
-      "wave_name": "Wave 1 - Correctness and backend",
-      "name": "Storage and state",
-      "focus": "Atomic writes, schema drift, concurrency, partial failure, cleanup."
+      "wave_name": "Wave 1: security, correctness, host install flows",
+      "name": "Install-flow reviewer (Antigravity, agy)",
+      "focus": "Same drill for the Antigravity and agy host configs. Repo-specific: replace the hosts with yours."
     },
     {
-      "id": "protocol-contracts",
+      "id": "install-cursor-codex-deepseek",
       "number": 5,
       "wave": 1,
-      "wave_name": "Wave 1 - Correctness and backend",
-      "name": "Protocol and interface contracts",
-      "focus": "CLI, JSON-RPC/MCP and schema validation versus documented contracts."
+      "wave_name": "Wave 1: security, correctness, host install flows",
+      "name": "Install-flow reviewer (Cursor, Codex, DeepSeek Harness)",
+      "focus": "Same drill for Cursor, Codex and the DeepSeek Harness Cordis overlay. Repo-specific: replace the hosts with yours."
     },
     {
-      "id": "first-run-flow",
+      "id": "mcp-server",
       "number": 6,
       "wave": 2,
-      "wave_name": "Wave 2 - Frontend, UX and flow",
-      "name": "First-run flow",
-      "focus": "Follow the quickstart cold, copy-paste every command, note each friction or failure."
+      "wave_name": "Wave 2: MCP, ACP/plugin claims, prompts, tests, docs accuracy",
+      "name": "MCP server reviewer",
+      "focus": "Protocol correctness, tool schemas, error handling, stdio behavior, security of the tool surface. Run the test suite and an MCP smoke test yourself."
     },
     {
-      "id": "cli-ux",
+      "id": "acp-universal-plugin",
       "number": 7,
       "wave": 2,
-      "wave_name": "Wave 2 - Frontend, UX and flow",
-      "name": "CLI and output UX",
-      "focus": "Messages, exit codes, readability, console encodings, actionable errors."
+      "wave_name": "Wave 2: MCP, ACP/plugin claims, prompts, tests, docs accuracy",
+      "name": "ACP and universal-plugin reviewer",
+      "focus": "Check every universal plugin/skill/MCP/ACP support claim against the actual files: ACP notes versus reality, SKILL.md validity, plugin manifests, what is genuinely portable versus aspirational."
     },
     {
-      "id": "host-integration",
+      "id": "prompt-quality",
       "number": 8,
       "wave": 2,
-      "wave_name": "Wave 2 - Frontend, UX and flow",
-      "name": "Host and IDE integration",
-      "focus": "Config files per host, paths, working directory assumptions, scoped compatibility claims."
+      "wave_name": "Wave 2: MCP, ACP/plugin claims, prompts, tests, docs accuracy",
+      "name": "Prompt-quality reviewer",
+      "focus": "Do the prompt files do what comments claim? Contradictions between prompts and code, untested claims in prompt docs, the measured benchmark story versus what the prompts would produce."
     },
     {
-      "id": "visual-render",
+      "id": "test-suite",
       "number": 9,
       "wave": 2,
-      "wave_name": "Wave 2 - Frontend, UX and flow",
-      "name": "Visual and rendering",
-      "focus": "Any UI, rendered docs, tables, screenshots; contrast, layout, overflow. For UI code run `python3 unslop_check.py <src>` and apply the manual list in docs/unslop.md. Mark N/A if there is no UI."
-    },
-    {
-      "id": "accessibility-i18n",
-      "number": 10,
-      "wave": 2,
-      "wave_name": "Wave 2 - Frontend, UX and flow",
-      "name": "Accessibility and i18n",
-      "focus": "Unicode, locale, screen-reader-friendly output, language assumptions."
-    },
-    {
-      "id": "secrets-privacy",
-      "number": 11,
-      "wave": 3,
-      "wave_name": "Wave 3 - Security and robustness",
-      "name": "Secrets and privacy",
-      "focus": "Keys, tokens, emails, personal data in files, logs and git history."
-    },
-    {
-      "id": "injection-trust",
-      "number": 12,
-      "wave": 3,
-      "wave_name": "Wave 3 - Security and robustness",
-      "name": "Injection and trust boundaries",
-      "focus": "Untrusted input into prompts, shells, paths, deserialization."
-    },
-    {
-      "id": "supply-chain",
-      "number": 13,
-      "wave": 3,
-      "wave_name": "Wave 3 - Security and robustness",
-      "name": "Dependencies and supply chain",
-      "focus": "Pins, licenses, vendored code provenance, optional installs."
-    },
-    {
-      "id": "failure-modes",
-      "number": 14,
-      "wave": 3,
-      "wave_name": "Wave 3 - Security and robustness",
-      "name": "Failure modes",
-      "focus": "Crash, kill, disk full, network down; fail-closed versus silent corruption."
-    },
-    {
-      "id": "abuse-limits",
-      "number": 15,
-      "wave": 3,
-      "wave_name": "Wave 3 - Security and robustness",
-      "name": "Abuse and resource limits",
-      "focus": "Cost runaway, unbounded loops, rate limits, size limits."
+      "wave_name": "Wave 2: MCP, ACP/plugin claims, prompts, tests, docs accuracy",
+      "name": "Test-suite reviewer",
+      "focus": "Are the tests meaningful or shallow? Coverage gaps, missing error-path, unicode and large-input cases, tests that assert nothing, flaky patterns. Propose the 5 most valuable missing tests."
     },
     {
       "id": "docs-accuracy",
+      "number": 10,
+      "wave": 2,
+      "wave_name": "Wave 2: MCP, ACP/plugin claims, prompts, tests, docs accuracy",
+      "name": "README and docs accuracy reviewer",
+      "focus": "Every factual claim in README and docs (counts, features, measured numbers, host support matrix) checked against the repo itself and flagged where overstated."
+    },
+    {
+      "id": "license-legal",
+      "number": 11,
+      "wave": 3,
+      "wave_name": "Wave 3: license, benchmark reproducibility, portability, misuse, i18n",
+      "name": "License and legal reviewer",
+      "focus": "License file present and valid, third-party assets and their licenses, attribution for embedded text, copyright headers, obligations the repo does not meet."
+    },
+    {
+      "id": "benchmark-reproducibility",
+      "number": 12,
+      "wave": 3,
+      "wave_name": "Wave 3: license, benchmark reproducibility, portability, misuse, i18n",
+      "name": "Benchmark-claims reproducibility reviewer",
+      "focus": "Can the published benchmark results be reproduced from what is in the repo? Missing raw outputs, truncated prompt files versus the documented originals, byte-equivalence claims. List exactly what reproducibility evidence is missing."
+    },
+    {
+      "id": "portability",
+      "number": 13,
+      "wave": 3,
+      "wave_name": "Wave 3: license, benchmark reproducibility, portability, misuse, i18n",
+      "name": "Portability and environment reviewer",
+      "focus": "Python version assumptions (for example tomllib needs 3.11), OS, path and encoding assumptions; anything that breaks on Windows, macOS or older Python. Check shebangs, subprocess calls, temp files."
+    },
+    {
+      "id": "adversarial-misuse",
+      "number": 14,
+      "wave": 3,
+      "wave_name": "Wave 3: license, benchmark reproducibility, portability, misuse, i18n",
+      "name": "Adversarial and misuse reviewer",
+      "focus": "How could the toolkit be abused or cause harm at scale (mass fake content, AI-detection evasion, impersonation)? Are there safeguards or responsible-use notes? Rate severity by realistic impact."
+    },
+    {
+      "id": "localization",
+      "number": 15,
+      "wave": 3,
+      "wave_name": "Wave 3: license, benchmark reproducibility, portability, misuse, i18n",
+      "name": "Localization and i18n reviewer",
+      "focus": "Claims about language support, hardcoded language-specific regex and strings, whether non-primary-language use is documented honestly, mixed-language input handling."
+    },
+    {
+      "id": "git-hygiene",
       "number": 16,
       "wave": 4,
-      "wave_name": "Wave 4 - Documentation and claims honesty",
-      "name": "Documentation accuracy",
-      "focus": "Every documented command, path and number versus the code and tree."
+      "wave_name": "Wave 4: git hygiene, dependencies, privacy, failure modes, API contract",
+      "name": "Git history and hygiene reviewer",
+      "focus": "Commit history quality, accidentally committed secrets or large binaries, .gitignore coverage, contributor identity leakage, force-push signs, tag and release hygiene."
     },
     {
-      "id": "claims-evidence",
+      "id": "dependencies-supply-chain",
       "number": 17,
       "wave": 4,
-      "wave_name": "Wave 4 - Documentation and claims honesty",
-      "name": "Claims versus evidence",
-      "focus": "Each quality, benchmark or compatibility claim has evidence or an untested label."
+      "wave_name": "Wave 4: git hygiene, dependencies, privacy, failure modes, API contract",
+      "name": "Dependencies and supply-chain reviewer",
+      "focus": "Every import and optional dependency: typosquatting risk, unpinned versions, abandoned packages, install instructions that could pull malicious packages, requirements completeness."
     },
     {
-      "id": "onboarding",
+      "id": "data-flow-privacy",
       "number": 18,
       "wave": 4,
-      "wave_name": "Wave 4 - Documentation and claims honesty",
-      "name": "Onboarding and examples",
-      "focus": "Examples run, fixtures present in a cold clone, prerequisites stated."
+      "wave_name": "Wave 4: git hygiene, dependencies, privacy, failure modes, API contract",
+      "name": "Data-flow and privacy reviewer",
+      "focus": "What user content flows where (task text, drafts, memory and lessons stores)? Does anything leave the machine unintentionally? Are privacy expectations documented accurately?"
     },
     {
-      "id": "changelog-versioning",
+      "id": "failure-modes",
       "number": 19,
       "wave": 4,
-      "wave_name": "Wave 4 - Documentation and claims honesty",
-      "name": "Changelog and versioning",
-      "focus": "Changelog matches the diff; version identifiers consistent."
+      "wave_name": "Wave 4: git hygiene, dependencies, privacy, failure modes, API contract",
+      "name": "Failure-modes and recovery reviewer",
+      "focus": "Bad input, missing files, permission errors, mid-write crashes: are errors actionable, does the checker and server degrade gracefully, is corrupt JSON recovered or refused?"
     },
     {
-      "id": "license-attribution",
+      "id": "api-contract",
       "number": 20,
       "wave": 4,
-      "wave_name": "Wave 4 - Documentation and claims honesty",
-      "name": "License and attribution",
-      "focus": "Licenses, third-party notices, copied content provenance."
+      "wave_name": "Wave 4: git hygiene, dependencies, privacy, failure modes, API contract",
+      "name": "API-contract and stability reviewer",
+      "focus": "MCP tool schemas, checker CLI contract, SKILL.md interface: documented accurately, versioned, stable? Breaking-change risks for hosts that integrate today."
     },
     {
-      "id": "test-coverage",
+      "id": "new-contributor",
       "number": 21,
       "wave": 5,
-      "wave_name": "Wave 5 - Tests and cross-cutting",
-      "name": "Test coverage",
-      "focus": "Untested branches, tests that cannot fail, missing regressions for fixed bugs."
+      "wave_name": "Wave 5: onboarding, dead code, performance, docs clarity, release gate",
+      "name": "New-contributor onboarding reviewer",
+      "focus": "Follow the README quickstart end to end exactly as written, cold. Every step that fails, is missing or assumes unstated knowledge, including running the checker on a sample and wiring one host config."
     },
     {
-      "id": "test-reliability",
+      "id": "dead-code",
       "number": 22,
       "wave": 5,
-      "wave_name": "Wave 5 - Tests and cross-cutting",
-      "name": "Test reliability",
-      "focus": "Flakiness, order dependence, network or time dependence, platform assumptions."
+      "wave_name": "Wave 5: onboarding, dead code, performance, docs clarity, release gate",
+      "name": "Duplicate and dead-code reviewer",
+      "focus": "Unused functions, dead files, duplicated logic between modules, stale docs, orphaned assets."
     },
     {
-      "id": "reproducibility",
+      "id": "performance-scale",
       "number": 23,
       "wave": 5,
-      "wave_name": "Wave 5 - Tests and cross-cutting",
-      "name": "Reproducibility",
-      "focus": "Fresh clone at the frozen SHA builds and passes; no hidden local state."
+      "wave_name": "Wave 5: onboarding, dead code, performance, docs clarity, release gate",
+      "name": "Performance and scale reviewer",
+      "focus": "Run the checker and server on large inputs (100KB text, hundreds of scenes): memory growth, pathological regex, quadratic loops. Measure, do not guess."
     },
     {
-      "id": "maintainability",
+      "id": "docs-clarity",
       "number": 24,
       "wave": 5,
-      "wave_name": "Wave 5 - Tests and cross-cutting",
-      "name": "Maintainability",
-      "focus": "Dead code, duplication, naming, module boundaries, hard-coded values."
+      "wave_name": "Wave 5: onboarding, dead code, performance, docs clarity, release gate",
+      "name": "Docs accessibility and clarity reviewer",
+      "focus": "README and docs for a non-native-English reader: structure, broken internal links, code-fence correctness, mixed languages without translation, table formatting."
     },
     {
-      "id": "adversarial-skeptic",
+      "id": "release-readiness",
       "number": 25,
       "wave": 5,
-      "wave_name": "Wave 5 - Tests and cross-cutting",
-      "name": "Adversarial skeptic",
-      "focus": "Try to break the other lenses' assumptions; hunt what no other lens covers."
+      "wave_name": "Wave 5: onboarding, dead code, performance, docs clarity, release gate",
+      "name": "Release-readiness gate",
+      "focus": "Holistic pass: given the repo's stated purpose, what must be fixed before calling it v1.0? Release-blocking gaps versus nice-to-haves, including a version and changelog policy assessment."
     }
   ]
 }
